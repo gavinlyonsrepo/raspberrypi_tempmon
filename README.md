@@ -44,7 +44,9 @@ sudo chmod u+x /usr/local/bin/raspberrypi_tempmon
 Usage
 -------------------------------------------
 Program is a terminal application.
+
 Run in a terminal by typing rpi_tempmon.sh: 
+
 rpi_tempmon.sh -[options][arguments]
 
 Options list (standalone cannot be combined):
@@ -94,14 +96,14 @@ needed for -m mail option. This is optional.
 Features
 ----------------------
 
-The program calcautes the ARM CPU and GPU temperature of 
+The program calculates the ARM CPU and GPU temperature of 
 a Raspberry Pi 2/3 and outputs them in Centigrade together with
 datetime stamp.
 
 The program has five features
 1. Normal mode - output to screen
-2. Continous mode - oupput to screen
-3. logfile mode   - ouput to logfile
+2. Continous mode - output to screen
+3. logfile mode   - outut to logfile
 4. logfolder mode - output to logfile
 5. mail mode  - output to email
 
@@ -148,7 +150,7 @@ please send a report.
 Pull requests, suggestions for improvements
 and new features welcome.
 * Contact: Upstream repo at github site below or glyons66@hotmail.com
-* Upstream repository: https://github.com/gavinlyonsrepo/cylon
+* Upstream repository: https://github.com/gavinlyonsrepo/raspberrypi_tempmon
 
 History
 ------------------
