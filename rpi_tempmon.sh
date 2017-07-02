@@ -105,7 +105,7 @@ function exitHandlerFunc
 			DESTLOG2) msgFunc red "$2" ;;
 			DESTCONFIG) msgFunc red "$DESTCONFIG";;
 			NONINT) msgFunc red "Integer expected, user entered non-integer, program exiting";;
-			FILEERROR) msgFunc red "No log file available";;
+			FILEERROR) msgFunc red "$2";;
 			*) msgFunc yellow "Unknown input to error handler";;
 	 esac
 	msgFunc norm "Goodbye $USER!"
@@ -167,15 +167,15 @@ case "$1" in
 	;;	
 	-m)
 		cd "$DESTLOG" || exitHandlerFunc DESTLOG
-		if [ -e log.txt ]
+		if [ -e log.txt ] #log file exist?
 		then
-			source "$DESTCONFIG/rpi_tempmon.cfg"
+			source "$DESTCONFIG/rpi_tempmon.cfg" || exitHandlerFunc FILEERROR  "No config file available" 
 			 {
 				echo Subject: raspberry PI temperature
 				find . -maxdepth 1  -type f -name "log.txt" -exec cat {} \;
 			 } | ssmtp "$RPI_AuthUser" 
 		else
-			exitHandlerFunc FILEERROR 
+			exitHandlerFunc FILEERROR  "No log file available"
 		fi
 		exit 0
 	;;
