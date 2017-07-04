@@ -38,7 +38,7 @@ sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
 * Give it permission to run as script 
 
 ```sh
-sudo chmod u+x /usr/local/bin/raspberrypi_tempmon
+sudo chmod u+x /usr/local/bin/rpi_tempmon.sh
 ```
 
 Usage
@@ -91,7 +91,7 @@ Dependencies
 -----------
 sSMTP - Simple SMTP
 sSMTP is a simple MTA to deliver mail from a computer to a mail hub (SMTP server)
-needed for -m mail option. This is optional.
+needed for -m mail option. This is optional. Install from repositories.
 
 Features
 ----------------------
@@ -102,14 +102,14 @@ datetime stamp.
 
 The program has five features
 1. Normal mode - output to screen
-2. Continous mode - output to screen
-3. logfile mode   - outut to logfile
+2. continuous mode - output to screen
+3. logfile mode   - output to logfile
 4. logfolder mode - output to logfile
 5. mail mode  - output to email
 
 In normal mode output, Data is sent to the terminal with option to repeat or quit
 
-In continues mode entered by option -c, The program enters a delay between 
+In continuous mode entered by option -c, The program enters a delay between 
 each display as a default this is set to 5 seconds by entered a number argument after -c 
 this can be adjusted for example "-c 60" will wait 60 seconds between scans. 
 Data is sent to terminal screen.
@@ -117,7 +117,7 @@ Data is sent to terminal screen.
 In logfile mode the data is appended into a file log.txt at output folder
 
 In logfolder mode in the output folder, a new sub-folder is created each
-time it is ran and the log-file put in here. The sub-folder has following syntax
+time it is ran and a new  log-file put in here. The sub-folder has following syntax
 1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX
 
 In mail mode a email is sent using ssmtp
