@@ -1,3 +1,7 @@
 #Version control history:
+
 * version 1.0-1 020717
 	* First version
+
+* Version 1.1-2 220717
+	* CPU Alarm function added

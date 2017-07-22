@@ -28,6 +28,8 @@ mkdir -p "$DESTCONFIG"
 
 #delay value default 5
 DELAY="5"
+declare -i COUNT=1
+
 #====================FUNCTION SECTION===============================
 
 #FUNCTION HEADER
@@ -75,6 +77,7 @@ function msgFunc
 		*) printf '%s\n' "ERROR unknown input to msgFunc" ;;
 	esac
 }
+
 #FUNCTION HEADER
 # NAME : makeDirFunc
 # DESCRIPTION :  makes a directory with time/date stamp and enters it
@@ -84,6 +87,7 @@ function makeDirFunc
 			mkdir -p "$dirVar"
 			cd "$dirVar" || exitHandlerFunc DESTLOG2 "$dirVar"
 }
+
 #FUNCTION HEADER
 # NAME :  exitHandlerFunc 
 # DESCRIPTION: error handler deal with user 
@@ -136,18 +140,25 @@ case "$1" in
 	;;
 	-l|-L)
 		#L for DIR , l for a file
-		local cpuVar=""
 		if [ "$1" = "-L" ] 
 		then
 			makeDirFunc  _RPIT
 		else
 			cd "$DESTLOG" || exitHandlerFunc DESTLOG
 		fi
-		cpuVar=$(</sys/class/thermal/thermal_zone0/temp)
+		CPU=$(</sys/class/thermal/thermal_zone0/temp)
 	    echo  "Raspberry pi temperature monitor" >> log.txt
 		echo  "$(date) at  $(hostname)" >>log.txt
 		echo  "GPU temperature => $(/opt/vc/bin/vcgencmd measure_temp | cut -d "=" -f 2)" >> log.txt
-		echo  "CPU temperature => $((cpuVar/1000))'C" >> log.txt
+		echo  "CPU temperature => $((CPU/1000))'C" >> log.txt
+		if [ "$ALARM_MODE" = "1" ] &&  [ "$1" = "-l" ] 
+		then
+			if ! AlarmFunc #if returns more than 0
+			then
+				echo "Warning : CPU over the temperature limit $CPU_UPPERLIMIT" >> log.txt
+				mailFunc "Warning"
+			fi 
+		fi
 		exit 0
 	;;
 	-c)
@@ -166,17 +177,7 @@ case "$1" in
 		fi
 	;;	
 	-m)
-		cd "$DESTLOG" || exitHandlerFunc DESTLOG
-		if [ -e log.txt ] #log file exist?
-		then
-			source "$DESTCONFIG/rpi_tempmon.cfg" || exitHandlerFunc FILEERROR  "No config file available" 
-			 {
-				echo Subject: raspberry PI temperature
-				find . -maxdepth 1  -type f -name "log.txt" -exec cat {} \;
-			 } | ssmtp "$RPI_AuthUser" 
-		else
-			exitHandlerFunc FILEERROR  "No log file available"
-		fi
+		mailFunc
 		exit 0
 	;;
 	
@@ -189,15 +190,52 @@ case "$1" in
 	;;
 esac	
 }
+
+#FUNCTION HEADER
+# NAME : mailFunc
+# DESCRIPTION : send mail
+function 	mailFunc
+{
+	cd "$DESTLOG" || exitHandlerFunc DESTLOG
+	if [ -e log.txt ] #log file exist?
+	then
+		 {
+			echo Subject: raspberry-PI-temperature-"$1"
+			find . -maxdepth 1  -type f -name "log.txt" -exec cat {} \;
+			#alternative code# mpack -s raspberry_PI_temperature log.txt "$RPI_AuthUser" 
+		 } | ssmtp "$RPI_AuthUser" 
+	else
+		exitHandlerFunc FILEERROR  "No log file available"
+	fi
+}
+
+#FUNCTION HEADER
+# NAME : mailFunc
+# DESCRIPTION : check alarm limits CPU mail
+function AlarmFunc
+{
+#check cpu
+if [ "$((CPU/1000))" -lt "$CPU_UPPERLIMIT" ]
+then 
+
+	return 0 #alarm off
+else
+	return 1 #alarm on
+fi 
+}
+
 #==================MAIN CODE====================================
+#get config file
+source "$DESTCONFIG/rpi_tempmon.cfg" || touch "$DESTCONFIG/rpi_tempmon.cfg"
 #if a user input deal with user input options for user input options
 if [ -n "$1" ] 
 then
     checkinputFunc "$1" "$2"
 fi
 clear
-msgFunc norm " "
+#main loop
 while true; do
+	msgFunc norm " "
 	CPU=$(</sys/class/thermal/thermal_zone0/temp)
 	msgFunc green "$(date) @ $(hostname)"
 	msgFunc line
@@ -205,18 +243,32 @@ while true; do
 	msgFunc norm "CPU temperature => $((CPU/1000))'C"
 	msgFunc line
 	msgFunc norm " "
-	if [  -n "$1" ] 
+	msgFunc norm "Number of scans $COUNT"
+	((COUNT++))
+	#check alarm function on?
+	if [ "$ALARM_MODE" = "1" ]
 	then
-		msgFunc norm "Continous mode on,"
-		msgFunc norm "Sleep delay set to $DELAY seconds : Press ctrl+c to quit"
+		if ! AlarmFunc #if returns more than 0
+		then
+			msgFunc red "Warning : CPU over the temperature limit $CPU_UPPERLIMIT"
+		fi
+	fi
+	
+	if [  -n "$1" ] #check for -c mode
+	then
+		msgFunc norm "Continuous mode is on"
+		msgFunc norm "Sleep delay set to $DELAY seconds : Press CTRL+c to quit."
 		sleep "$DELAY"
+		clear
 	else
+		msgFunc norm " "
 		printf "%s\n" "Repeat? [y/n/q]"
-		if ! msgFunc yesno 
-		#if no exit
+		if ! msgFunc yesno #if no then exit
 		then
 			exitHandlerFunc EXITOUT
 		fi
+		clear
 	fi
+	
 done
 #======================END==============================

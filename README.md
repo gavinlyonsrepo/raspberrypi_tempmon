@@ -4,7 +4,7 @@ Overview
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 2/3  
 * Description: This bash script will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
-includes logging and mailing options. 
+includes logging, alarm and mailing options. 
 * Author: Gavin Lyons
 
 Table of contents
@@ -69,14 +69,23 @@ rpi_tempmon files needed are listed below:
 | /usr/bin/local/rpi_tempmon.sh | The  shell script |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, optional, user made, not installed |
 
-Config file: The user can create an optional config file, used  
-for -m option. The config file is created so the ssmtp config file can be kept 
-secured from all but root account. it contains one setting the email address for 
+Config file: The user can create a  config file, used  
+for -m mail option and the alarm function. 
+The sstmp setting in config file is created so the ssmtp config file can be kept 
+secured from all but root account. The setting "RPI_AuthUser" the is email address for 
 which is the destination of -m option.
+The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
+CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade should be a positive integer.
+If alarm is on when CPU goes above this temperature actives alarm functions. 
+At startup file is read by program, if it does not exist it creates a blank one.
+A dummy config file is available in documentation folder.
 
 >
 >RPI_AuthUser=examplemail@gmail.com
 >
+>ALARM_MODE=1
+>
+>CPU_UPPERLIMIT=60
 
 Output
 -------------------------------------
@@ -103,7 +112,7 @@ datetime stamp.
 The program has five features
 1. Normal mode - output to screen
 2. continuous mode - output to screen
-3. logfile mode   - output to logfile
+3. logfile mode   - output to logfile(also mail mode if alarm triggered)
 4. logfolder mode - output to logfile
 5. mail mode  - output to email
 
@@ -114,13 +123,19 @@ each display as a default this is set to 5 seconds by entered a number argument 
 this can be adjusted for example "-c 60" will wait 60 seconds between scans. 
 Data is sent to terminal screen.
  
-In logfile mode the data is appended into a file log.txt at output folder
+If an alarm limit is on and triggered by CPU going above limit.
+Data in red is displayed in screen for modes 1 and 2.  
+For mode 3 an email is sent using mode 5.
+but with warning in title and the log file is appended with error text.
+"Warning : CPU over the temperature limit 10 "
+
+In logfile mode the data is appended into a file log.txt at output folder. 
 
 In logfolder mode in the output folder, a new sub-folder is created each
 time it is ran and a new  log-file put in here. The sub-folder has following syntax
 1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX
 
-In mail mode a email is sent using ssmtp
+In mail mode an email is sent using ssmtp
 The mail contains the data from logfile mode only it will not work with 
 sub-folders from logfolder mode.
 The user most install and configure the ssmtp program. 
