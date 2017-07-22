@@ -203,7 +203,7 @@ function 	mailFunc
 			echo Subject: raspberry-PI-temperature-"$1"
 			find . -maxdepth 1  -type f -name "log.txt" -exec cat {} \;
 			#alternative code# mpack -s raspberry_PI_temperature log.txt "$RPI_AuthUser" 
-		 } | ssmtp "$RPI_AuthUser" 
+		 } | /usr/sbin/ssmtp "$RPI_AuthUser" 
 	else
 		exitHandlerFunc FILEERROR  "No log file available"
 	fi

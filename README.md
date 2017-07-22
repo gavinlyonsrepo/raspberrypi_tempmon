@@ -135,6 +135,8 @@ In logfolder mode in the output folder, a new sub-folder is created each
 time it is ran and a new  log-file put in here. The sub-folder has following syntax
 1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX
 
+logging modes are designed to be used with automation like crontab.
+
 In mail mode an email is sent using ssmtp
 The mail contains the data from logfile mode only it will not work with 
 sub-folders from logfolder mode.
