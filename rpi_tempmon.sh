@@ -30,6 +30,9 @@ mkdir -p "$DESTCONFIG"
 DELAY="5"
 declare -i COUNT=1
 
+
+# trap keyboard interrupt (control-c)
+trap exitHandlerFunc  SIGINT
 #====================FUNCTION SECTION===============================
 
 #FUNCTION HEADER
@@ -94,6 +97,11 @@ function makeDirFunc
 #exits and paths not found errors 
 function exitHandlerFunc
 {
+	 ##clear the  LED if applicable
+	if [ "$LED_MODE" = "1" ]
+		then
+			LedFunc "off"
+	fi
 	#double square brackets without use of quotes on matching pattern 
 	#for glob support
 	if [[ "$1" = DEST* ]]
@@ -110,7 +118,9 @@ function exitHandlerFunc
 			DESTCONFIG) msgFunc red "$DESTCONFIG";;
 			NONINT) msgFunc red "Integer expected, user entered non-integer, program exiting";;
 			FILEERROR) msgFunc red "$2";;
-			*) msgFunc yellow "Unknown input to error handler";;
+			*) #run when user hits control-c during continuous mode
+			echo -en "\n***Exiting***\n"
+		    exit $?;;
 	 esac
 	msgFunc norm "Goodbye $USER!"
 	msgFunc anykey "and exit."
@@ -222,8 +232,36 @@ then
 else
 	return 1 #alarm on
 fi 
+
+}
+#FUNCTION HEADER
+# NAME : LedFunc
+# DESCRIPTION : turn on LED if alarm set takes $1 input off or on 
+function LedFunc
+{
+	if [ "$1" = "on" ]
+	then
+		python /usr/lib/rpi_tempmon/rpi_tempmon_lib.py "$GPIO_LED" "on"
+	elif [ "$1" = "off" ]
+	then 
+		python /usr/lib/rpi_tempmon/rpi_tempmon_lib.py "$GPIO_LED" "off"
+	fi
 }
 
+#FUNCTION HEADER
+# NAME :control_c()
+# DESCRIPTION : 
+# run when user hits control-c during continuous mode
+#control_c()
+#{
+  #echo -en "\n***Exiting***\n"
+ 	##clear the  LED if applicable
+	#if [ "$LED_MODE" = "1" ]
+		#then
+			#LedFunc "off"
+	#fi
+  #exit $?
+#}
 #==================MAIN CODE====================================
 #get config file
 source "$DESTCONFIG/rpi_tempmon.cfg" || touch "$DESTCONFIG/rpi_tempmon.cfg"
@@ -235,6 +273,7 @@ fi
 clear
 #main loop
 while true; do
+	#display the temperatures
 	msgFunc norm " "
 	CPU=$(</sys/class/thermal/thermal_zone0/temp)
 	msgFunc green "$(date) @ $(hostname)"
@@ -247,20 +286,27 @@ while true; do
 	((COUNT++))
 	#check alarm function on?
 	if [ "$ALARM_MODE" = "1" ]
+	msgFunc norm "Alarm mode is on, Limit at : $CPU_UPPERLIMIT "
 	then
-		if ! AlarmFunc #if returns more than 0
+		if ! AlarmFunc #if set returns more than 0
 		then
 			msgFunc red "Warning : CPU over the temperature limit $CPU_UPPERLIMIT"
+			#check LED function on?
+				if [ "$LED_MODE" = "1" ]
+				msgFunc norm "LED mode is on, GPIO pin selected: $GPIO_LED"
+				then
+					LedFunc "on"
+				fi
 		fi
 	fi
 	
-	if [  -n "$1" ] #check for -c mode
+	if [  -n "$1" ] #check for -c mode?
 	then
 		msgFunc norm "Continuous mode is on"
 		msgFunc norm "Sleep delay set to $DELAY seconds : Press CTRL+c to quit."
 		sleep "$DELAY"
 		clear
-	else
+	else # if no -c mode display prompt
 		msgFunc norm " "
 		printf "%s\n" "Repeat? [y/n/q]"
 		if ! msgFunc yesno #if no then exit
@@ -268,6 +314,11 @@ while true; do
 			exitHandlerFunc EXITOUT
 		fi
 		clear
+	fi
+	#clear the  LED if applicable
+	if [ "$LED_MODE" = "1" ]
+		then
+			LedFunc "off"
 	fi
 	
 done

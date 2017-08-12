@@ -4,7 +4,9 @@ Overview
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 2/3  
 * Description: This bash script will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
-includes logging, alarm and mailing options. 
+includes GPIO LED output, logging, alarm and mailing options. 
+The main script is written in bash but it uses 
+a python module for the GPIO LED function.
 * Author: Gavin Lyons
 
 Table of contents
@@ -26,19 +28,31 @@ Table of contents
 Installation
 -----------------------------------------------
 rpi_tempmon is installed by copying script to an executable 
-path at $PATH and making it executable.
+path at $PATH and making it executable and also if the user wants to use the GPIO LED function
+they also must install a python library file.
 
 * Download and extract files from repository.
+
 * Copy the script file to an executable path for example 
 
 ```sh 
 sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
 ```
 
-* Give it permission to run as script 
+* Give it permissions 
 
 ```sh
 sudo chmod u+x /usr/local/bin/rpi_tempmon.sh
+```
+* copy the python library file to following location
+
+```sh
+sudo cp /home/pi/Downloads/rpi_tempmon_lib.py /usr/lib/rpi_tempmon
+```
+* Give it permissions
+
+```sh
+sudo chmod u+x /usr/lib/rpi_tempmon/rpi_tempmon_lib.py
 ```
 
 Usage
@@ -55,10 +69,10 @@ Options list (standalone cannot be combined):
 | --------------- | --------------- |
 | -h  | Print help information and exit |
 | -v  | Print version information and exit |
-| -c  | enters continuous mode, optional number of seconds as a argument|
-| -l  | creates and/or appends to log-file at output folder |
-| -L  | creates a sub-folder at output folder with date/time stamp and puts a log file in it |
-| -m  | sends the output of -l to an email account |
+| -c  | Enters continuous mode, optional number of seconds as a argument|
+| -l  | Creates and/or appends to log-file at output folder |
+| -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
+| -m  | Sends the output of -l to an email account |
 
 Files and setup
 -----------------------------------------
@@ -77,7 +91,11 @@ which is the destination of -m option.
 The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
 CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade should be a positive integer.
 If alarm is on when CPU goes above this temperature actives alarm functions. 
+LED_MODE which should be set to one or zero(one: alarm on, zero: off) if on 
+an LED will light during an alarm state in continuous and normal mode.
+The LED must be connected to a RPI GPIO pin as defined by GPIO_LED.
 At startup file is read by program, if it does not exist it creates a blank one.
+
 A dummy config file is available in documentation folder.
 
 >
@@ -86,7 +104,11 @@ A dummy config file is available in documentation folder.
 >ALARM_MODE=1
 >
 >CPU_UPPERLIMIT=60
-
+>
+>LED_MODE=0
+>
+>GPIO_LED=26
+>
 Output
 -------------------------------------
 
@@ -99,6 +121,7 @@ $HOME/.cache/rpi_tempmon/
 Dependencies
 -----------
 sSMTP - Simple SMTP
+
 sSMTP is a simple MTA to deliver mail from a computer to a mail hub (SMTP server)
 needed for -m mail option. This is optional. Install from repositories.
 
@@ -110,18 +133,19 @@ a Raspberry Pi 2/3 and outputs them in Centigrade together with
 datetime stamp.
 
 The program has five features
-1. Normal mode - output to screen
-2. continuous mode - output to screen
-3. logfile mode   - output to logfile(also mail mode if alarm triggered)
-4. logfolder mode - output to logfile
-5. mail mode  - output to email
+1. Normal mode - output to screen with optional LED output.
+2. continuous mode - output to screen with optional LED output.
+3. logfile mode   - output to logfile(also mail mode if alarm triggered).
+4. logfolder mode - output to logfile.
+5. mail mode  - output to email.
 
 In normal mode output, Data is sent to the terminal with option to repeat or quit
+A LED will light  for an on Alarm state if set.
 
 In continuous mode entered by option -c, The program enters a delay between 
 each display as a default this is set to 5 seconds by entered a number argument after -c 
 this can be adjusted for example "-c 60" will wait 60 seconds between scans. 
-Data is sent to terminal screen.
+Data is sent to terminal screen. A LED will light if for an on Alarm state if set.
  
 If an alarm limit is on and triggered by CPU going above limit.
 Data in red is displayed in screen for modes 1 and 2.  
