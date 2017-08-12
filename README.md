@@ -69,7 +69,7 @@ Options list (standalone cannot be combined):
 | --------------- | --------------- |
 | -h  | Print help information and exit |
 | -v  | Print version information and exit |
-| -c  | Enters continuous mode, optional number of seconds as a argument|
+| -c  | Enters continuous mode, optional number of seconds as a argument eg (-c 2)|
 | -l  | Creates and/or appends to log-file at output folder |
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the output of -l to an email account |
@@ -81,17 +81,18 @@ rpi_tempmon files needed are listed below:
 | File Path | Description |
 | ------ | ------ |
 | /usr/bin/local/rpi_tempmon.sh | The  shell script |
+| /usr/lib/rpi_tempmon/rpi_tempmon_lib.py | python module LED_GPIO |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, optional, user made, not installed |
 
 Config file: The user can create a  config file, used  
-for -m mail option and the alarm function. 
+for -m mail option, LED feature and the alarm function. 
 The sstmp setting in config file is created so the ssmtp config file can be kept 
-secured from all but root account. The setting "RPI_AuthUser" the is email address for 
-which is the destination of -m option.
+secured from all but root account. The setting "RPI_AuthUser" the is email address 
+ destination of data from -m option.
 The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
 CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade should be a positive integer.
 If alarm is on when CPU goes above this temperature actives alarm functions. 
-LED_MODE which should be set to one or zero(one: alarm on, zero: off) if on 
+LED_MODE which should be set to one or zero(one: LED mode on, zero: off) if on 
 an LED will light during an alarm state in continuous and normal mode.
 The LED must be connected to a RPI GPIO pin as defined by GPIO_LED.
 At startup file is read by program, if it does not exist it creates a blank one.
@@ -135,12 +136,12 @@ datetime stamp.
 The program has five features
 1. Normal mode - output to screen with optional LED output.
 2. continuous mode - output to screen with optional LED output.
-3. logfile mode   - output to logfile(also mail mode if alarm triggered).
+3. logfile mode   - output to logfile(also mail mode if alarm mode on and triggered).
 4. logfolder mode - output to logfile.
 5. mail mode  - output to email.
 
-In normal mode output, Data is sent to the terminal with option to repeat or quit
-A LED will light  for an on Alarm state if set.
+In normal mode output, Data is sent to the terminal with option to repeat or quit. 
+A LED will light for an on Alarm state if setup.
 
 In continuous mode entered by option -c, The program enters a delay between 
 each display as a default this is set to 5 seconds by entered a number argument after -c 
@@ -154,10 +155,11 @@ but with warning in title and the log file is appended with error text.
 "Warning : CPU over the temperature limit 10 "
 
 In logfile mode the data is appended into a file log.txt at output folder. 
+ With optional mail setup if alarm mode setup.
 
 In logfolder mode in the output folder, a new sub-folder is created each
 time it is ran and a new  log-file put in here. The sub-folder has following syntax
-1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX
+1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX. This folder mode does not work with mail mode.
 
 logging modes are designed to be used with automation like crontab.
 

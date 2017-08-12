@@ -1,5 +1,5 @@
-'''gavin lyons 120817 called from 
-tunrs led on and off rp_tempmon passed LED GPIO and on/off option '''
+'''gavin lyons 120817: called from rpi_tempmon.sh
+tunrs led on and off, Passed LED GPIO pin number and on/off option '''
 
 import RPi.GPIO as GPIO
 import sys

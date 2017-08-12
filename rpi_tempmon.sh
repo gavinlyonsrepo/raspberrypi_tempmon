@@ -138,7 +138,7 @@ case "$1" in
 	-v)
 		msgFunc norm " "
 		msgFunc norm "*** rpi_tempmon ***"
-		msgFunc norm "*** Version 1.0 ***" 
+		msgFunc norm "*** Version 1.2-3 ***" 
 		exitHandlerFunc EXITOUT
 	;;
 	-h)
@@ -220,7 +220,7 @@ function 	mailFunc
 }
 
 #FUNCTION HEADER
-# NAME : mailFunc
+# NAME : alarmFunc
 # DESCRIPTION : check alarm limits CPU mail
 function AlarmFunc
 {
@@ -248,20 +248,7 @@ function LedFunc
 	fi
 }
 
-#FUNCTION HEADER
-# NAME :control_c()
-# DESCRIPTION : 
-# run when user hits control-c during continuous mode
-#control_c()
-#{
-  #echo -en "\n***Exiting***\n"
- 	##clear the  LED if applicable
-	#if [ "$LED_MODE" = "1" ]
-		#then
-			#LedFunc "off"
-	#fi
-  #exit $?
-#}
+
 #==================MAIN CODE====================================
 #get config file
 source "$DESTCONFIG/rpi_tempmon.cfg" || touch "$DESTCONFIG/rpi_tempmon.cfg"
