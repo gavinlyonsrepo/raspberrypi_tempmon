@@ -41,31 +41,31 @@ they also must install a python script file for this.
 * Copy the script file to an executable path for example 
 
 ```sh 
-sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
+$ sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
 ```
 
 * Give it executable permissions 
 
 ```sh
-sudo chmod u+x /usr/local/bin/rpi_tempmon.sh
+$ sudo chmod u+x /usr/local/bin/rpi_tempmon.sh
 ```
 
-* copy the python library file to following location if you wish to 
-use LED and graph function. see file section for details.
+* Copy the python library files to following location if you wish to 
+use LED and graph function. See file section for details.
 
 
 ```sh
-sudo cp /home/pi/Downloads/rpi_tempmon_lib.py /usr/lib/rpi_tempmon
+$ sudo cp /home/pi/Downloads/rpi_tempmon_lib.py /usr/lib/rpi_tempmon
 ```
 
 ```sh
-sudo cp /home/pi/Downloads/rpi_tempmon_2_lib.py /usr/lib/rpi_tempmon
+$ sudo cp /home/pi/Downloads/rpi_tempmon_2_lib.py /usr/lib/rpi_tempmon
 ```
 
-These made need executable permissions depending on your system.
+These may need executable permissions depending on your system.
 
 ```sh
-sudo chmod u+x /usr/lib/rpi_tempmon/*
+$ sudo chmod u+x /usr/lib/rpi_tempmon/*
 ```
 
 Usage
@@ -148,23 +148,23 @@ needed for -m mail option. This is optional. Install from repositories.
 
 * Install:
 ```sh
-sudo apt-get install ssmtp
+$ sudo apt-get install ssmtp
 ```
 
 * Config:
 To configure SSMTP, you will have to edit its configuration file 
 (/etc/ssmtp/ssmtp.conf) and enter your account settings. see below link
 https://wiki.archlinux.org/index.php/SSMTP
-and remember to config the rpi_tempmon.cfg as well see files.
+and remember to configure the rpi_tempmon.cfg as well, see files section.
 
 If user is using the python modules you must have python 3 installed.
 Furthermore the graph modules requires matplotlib to draw graph
-install as follows
+install as follows:
 
 matplotlib -plotting library 
 
 ```sh
-sudo apt-get install python-matplotlib
+$ sudo apt-get install python-matplotlib
 ```
 
 
@@ -194,9 +194,10 @@ Data is sent to terminal screen. A LED will light if for an on Alarm state if se
 If an alarm limit is on and triggered by CPU going above limit, 
 data in red is displayed in screen.
  
-For mode 3 an email is sent using mode 5 function.
+For mode 3 an email is sent using mode 5 function, 
 but with warning in title and the log file is appended with error text.
-"Warning : CPU over the temperature limit 10 "
+
+> "Warning : CPU over the temperature limit 10 "
 
 In logfile mode the data is appended into a file log.txt at output folder. 
  With optional mail setup if alarm mode setup. Sample output of logfile:
@@ -214,21 +215,24 @@ time it is ran and a new log-file put in here. The sub-folder has following synt
 1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX. 
 This folder mode does not work with mail or graph mode at present.
 
-logging modes are designed to be used with UNIX automation like crontab.
+Logging modes are designed to be used with UNIX automation like crontab.
 
-In mail mode an email is sent using ssmtp
+In mail mode an email is sent using ssmtp. 
 The mail contains the data from logfile mode only it will not work with 
 sub-folders from logfolder mode.
-The user must install and configure the ssmtp program. 
-Also the rpi_tempmon.cfg file mentioned above must be configured
-this file allows for user to set an email without access to ssmtp
-config file which should be set up just for root account 
+The user must install and configure the ssmtp program(see installation section)
+Also the rpi_tempmon.cfg file mentioned above must be configured. 
+This file allows for user to set an email without access to ssmtp
+config file which should be set up just for root account.
 
+In graph mode the program calls a python function
+and using matplotlib (plotting library) creates a plot of data of GPU andCPu verus time
+from output of mode 3 the logfile.txt.
 
 See Also
 -----------
 README.md is at repository.
-screenshots and dummy config file are also available.
+Screenshots and dummy config file are also available.
 
 Communication
 -----------
