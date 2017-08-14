@@ -36,12 +36,12 @@ they also must install a python script file for this.
 If the user wants to use the optional log file graph function
 they also must install a python script file for this. 
 
-* Download and extract files from repository.
+* Download and extract files from repository latest version released to downloads folder
 
 * Copy the script file to an executable path for example 
 
 ```sh 
-$ sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
+$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/src /usr/local/bin
 ```
 
 * Give it executable permissions 
@@ -55,11 +55,11 @@ use LED and graph function. See file section for details.
 
 
 ```sh
-$ sudo cp /home/pi/Downloads/rpi_tempmon_lib.py /usr/lib/rpi_tempmon
+$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/modules /usr/lib/rpi_tempmon
 ```
 
 ```sh
-$ sudo cp /home/pi/Downloads/rpi_tempmon_2_lib.py /usr/lib/rpi_tempmon
+$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/modules  /usr/lib/rpi_tempmon
 ```
 
 These may need executable permissions depending on your system.
@@ -226,7 +226,7 @@ This file allows for user to set an email without access to ssmtp
 config file which should be set up just for root account.
 
 In graph mode the program calls a python function
-and using matplotlib (plotting library) creates a plot of data of GPU andCPu verus time
+and using matplotlib (plotting library) creates a plot of data of GPU and CPU verus time
 from output of mode 3 the logfile.txt.
 
 See Also
