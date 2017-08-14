@@ -4,9 +4,9 @@ Overview
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 2/3  
 * Description: This bash script will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
-includes GPIO LED output, logging, alarm and mailing options. 
+includes GPIO LED output, logging, alarm limit, graph and e-mailing options. 
 The main script is written in bash but it uses 
-a python module for the GPIO LED function.
+two python module for the GPIO LED function and for the graph function.
 * Author: Gavin Lyons
 
 Table of contents
@@ -28,8 +28,13 @@ Table of contents
 Installation
 -----------------------------------------------
 rpi_tempmon is installed by copying script to an executable 
-path at $PATH and making it executable and also if the user wants to use the GPIO LED function
-they also must install a python library file.
+path at $PATH and making it executable.
+ 
+If the user wants to use the optional GPIO LED function
+they also must install a python script file for this.
+
+If the user wants to use the optional log file graph function
+they also must install a python script file for this. 
 
 * Download and extract files from repository.
 
@@ -39,25 +44,34 @@ they also must install a python library file.
 sudo cp /home/pi/Downloads/rpi_tempmon.sh /usr/local/bin
 ```
 
-* Give it permissions 
+* Give it executable permissions 
 
 ```sh
 sudo chmod u+x /usr/local/bin/rpi_tempmon.sh
 ```
-* copy the python library file to following location
+
+* copy the python library file to following location if you wish to 
+use LED and graph function. see file section for details.
+
 
 ```sh
 sudo cp /home/pi/Downloads/rpi_tempmon_lib.py /usr/lib/rpi_tempmon
 ```
-* Give it permissions
 
 ```sh
-sudo chmod u+x /usr/lib/rpi_tempmon/rpi_tempmon_lib.py
+sudo cp /home/pi/Downloads/rpi_tempmon_2_lib.py /usr/lib/rpi_tempmon
+```
+
+These made need executable permissions depending on your system.
+
+```sh
+sudo chmod u+x /usr/lib/rpi_tempmon/*
 ```
 
 Usage
 -------------------------------------------
-Program is a terminal application.
+Program is a bash terminal application which calls python modules 
+for some functions.
 
 Run in a terminal by typing rpi_tempmon.sh: 
 
@@ -73,6 +87,7 @@ Options list (standalone cannot be combined):
 | -l  | Creates and/or appends to log-file at output folder |
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the output of -l to an email account |
+| -g  | Generate a graph of output of -l mode |
 
 Files and setup
 -----------------------------------------
@@ -80,8 +95,9 @@ rpi_tempmon files needed are listed below:
 
 | File Path | Description |
 | ------ | ------ |
-| /usr/bin/local/rpi_tempmon.sh | The  shell script |
+| /usr/bin/local/rpi_tempmon.sh | The main shell script |
 | /usr/lib/rpi_tempmon/rpi_tempmon_lib.py | python module LED_GPIO |
+| /usr/lib/rpi_tempmon/rpi_tempmon_2_lib.py | python module graph generator |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, optional, user made, not installed |
 
 Config file: The user can create a  config file, used  
@@ -90,14 +106,16 @@ The sstmp setting in config file is created so the ssmtp config file can be kept
 secured from all but root account. The setting "RPI_AuthUser" the is email address 
  destination of data from -m option.
 The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
-CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade should be a positive integer.
-If alarm is on when CPU goes above this temperature actives alarm functions. 
+CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade, should be a positive integer.
+If alarm mode is on when CPU temperature  goes above this limit, the alarm function will activate. 
 LED_MODE which should be set to one or zero(one: LED mode on, zero: off) if on 
 an LED will light during an alarm state in continuous and normal mode.
-The LED must be connected to a RPI GPIO pin as defined by GPIO_LED.
+The LED must be connected to a RPI GPIO pin as defined by GPIO_LED number.
 At startup file is read by program, if it does not exist it creates a blank one.
 
 A dummy config file is available in documentation folder.
+
+Settings:
 
 >
 >RPI_AuthUser=examplemail@gmail.com
@@ -110,6 +128,8 @@ A dummy config file is available in documentation folder.
 >
 >GPIO_LED=26
 >
+
+
 Output
 -------------------------------------
 
@@ -126,51 +146,6 @@ sSMTP - Simple SMTP
 sSMTP is a simple MTA to deliver mail from a computer to a mail hub (SMTP server)
 needed for -m mail option. This is optional. Install from repositories.
 
-Features
-----------------------
-
-The program calculates the ARM CPU and GPU temperature of 
-a Raspberry Pi 2/3 and outputs them in Centigrade together with
-datetime stamp.
-
-The program has five features
-1. Normal mode - output to screen with optional LED output.
-2. continuous mode - output to screen with optional LED output.
-3. logfile mode   - output to logfile(also mail mode if alarm mode on and triggered).
-4. logfolder mode - output to logfile.
-5. mail mode  - output to email.
-
-In normal mode output, Data is sent to the terminal with option to repeat or quit. 
-A LED will light for an on Alarm state if setup.
-
-In continuous mode entered by option -c, The program enters a delay between 
-each display as a default this is set to 5 seconds by entered a number argument after -c 
-this can be adjusted for example "-c 60" will wait 60 seconds between scans. 
-Data is sent to terminal screen. A LED will light if for an on Alarm state if set.
- 
-If an alarm limit is on and triggered by CPU going above limit.
-Data in red is displayed in screen for modes 1 and 2.  
-For mode 3 an email is sent using mode 5.
-but with warning in title and the log file is appended with error text.
-"Warning : CPU over the temperature limit 10 "
-
-In logfile mode the data is appended into a file log.txt at output folder. 
- With optional mail setup if alarm mode setup.
-
-In logfolder mode in the output folder, a new sub-folder is created each
-time it is ran and a new  log-file put in here. The sub-folder has following syntax
-1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX. This folder mode does not work with mail mode.
-
-logging modes are designed to be used with automation like crontab.
-
-In mail mode an email is sent using ssmtp
-The mail contains the data from logfile mode only it will not work with 
-sub-folders from logfolder mode.
-The user most install and configure the ssmtp program. 
-Also the rpi_tempmon.cfg file mentioned above must be configured
-this file allows for user to set an email without access to ssmtp
-config file which should be set up just for root account 
-
 * Install:
 ```sh
 sudo apt-get install ssmtp
@@ -180,11 +155,80 @@ sudo apt-get install ssmtp
 To configure SSMTP, you will have to edit its configuration file 
 (/etc/ssmtp/ssmtp.conf) and enter your account settings. see below link
 https://wiki.archlinux.org/index.php/SSMTP
-and remember to config the rpi_tempmon.cfg  as well
+and remember to config the rpi_tempmon.cfg as well see files.
+
+If user is using the python modules you must have python 3 installed.
+Furthermore the graph modules requires matplotlib to draw graph
+install as follows
+
+matplotlib -plotting library 
+
+```sh
+sudo apt-get install python-matplotlib
+```
+
+
+Features
+----------------------
+
+The program calculates the ARM CPU and GPU temperature of 
+a Raspberry Pi 2/3 and outputs them in Centigrade together with
+datetime stamp.
+
+The program has six features
+1. Normal mode - output to screen with optional LED output.
+2. Continuous mode - output to screen with optional LED output.
+3. Logfile mode   - output to single logfile(also mail mode if alarm mode on and triggered).
+4. Logfolder mode - output to multiple logfile in separate folders.
+5. Mail mode  - output to email.
+6. Graph mode - Displays a graph of logfile created in mode 3
+
+
+In normal mode output, Data is sent to the terminal with option to repeat or quit. 
+A LED will light and Data in red is displayed in screen for an on Alarm state if setup.
+
+In continuous mode entered by option -c, The program enters a delay between 
+each display as a default this is set to 5 seconds by entered a number argument after -c 
+this can be adjusted for example "-c 60" will wait 60 seconds between scans. 
+Data is sent to terminal screen. A LED will light if for an on Alarm state if set.
+If an alarm limit is on and triggered by CPU going above limit, 
+data in red is displayed in screen.
+ 
+For mode 3 an email is sent using mode 5 function.
+but with warning in title and the log file is appended with error text.
+"Warning : CPU over the temperature limit 10 "
+
+In logfile mode the data is appended into a file log.txt at output folder. 
+ With optional mail setup if alarm mode setup. Sample output of logfile:
+ 
+```sh
+Raspberry pi temperature monitor at  @hostname
+TS = 2017-08-14-00:09:51 
+EPOCH = 1502665791
+GPU temperature = 56.9'C
+CPU temperature = 56'C
+```
+
+In logfolder mode in the output folder, a new sub-folder is created each
+time it is ran and a new log-file put in here. The sub-folder has following syntax
+1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX. 
+This folder mode does not work with mail or graph mode at present.
+
+logging modes are designed to be used with UNIX automation like crontab.
+
+In mail mode an email is sent using ssmtp
+The mail contains the data from logfile mode only it will not work with 
+sub-folders from logfolder mode.
+The user must install and configure the ssmtp program. 
+Also the rpi_tempmon.cfg file mentioned above must be configured
+this file allows for user to set an email without access to ssmtp
+config file which should be set up just for root account 
+
 
 See Also
 -----------
 README.md is at repository.
+screenshots and dummy config file are also available.
 
 Communication
 -----------

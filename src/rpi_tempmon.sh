@@ -135,20 +135,20 @@ function checkinputFunc
 {
 case "$1" in
 	"");;
-	-v)
+	-v) #verion
 		msgFunc norm " "
 		msgFunc norm "*** rpi_tempmon ***"
-		msgFunc norm "*** Version 1.2-3 ***" 
+		msgFunc norm "*** Version 1.3-4 ***" 
 		exitHandlerFunc EXITOUT
 	;;
-	-h)
+	-h) #help
 		msgFunc norm " "
 		msgFunc norm "Usage: -l, -L, -v, -h, -c (number of seconds)"
 		msgFunc norm "See README.md for details at webpage:"
 		msgFunc norm "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
 		exitHandlerFunc EXITOUT
 	;;
-	-l|-L)
+	-l|-L) #logmodes
 		#L for DIR , l for a file
 		if [ "$1" = "-L" ] 
 		then
@@ -157,15 +157,16 @@ case "$1" in
 			cd "$DESTLOG" || exitHandlerFunc DESTLOG
 		fi
 		CPU=$(</sys/class/thermal/thermal_zone0/temp)
-	    echo  "Raspberry pi temperature monitor" >> log.txt
-		echo  "$(date) at  $(hostname)" >>log.txt
-		echo  "GPU temperature => $(/opt/vc/bin/vcgencmd measure_temp | cut -d "=" -f 2)" >> log.txt
-		echo  "CPU temperature => $((CPU/1000))'C" >> log.txt
+	    echo  "Raspberry pi temperature monitor at  $(hostname)" >> log.txt
+		echo  "TS = $(date +%F-%X) " >>log.txt
+		echo  "EPOCH = $(date +%s)" >> log.txt
+		echo  "GPU temperature = $(/opt/vc/bin/vcgencmd measure_temp | cut -d "=" -f 2)" >> log.txt
+		echo  "CPU temperature = $((CPU/1000))'C" >> log.txt
 		if [ "$ALARM_MODE" = "1" ] &&  [ "$1" = "-l" ] 
 		then
 			if ! AlarmFunc #if returns more than 0
 			then
-				echo "Warning : CPU over the temperature limit $CPU_UPPERLIMIT" >> log.txt
+				echo "Warning : cpu over the temperature limit $CPU_UPPERLIMIT" >> log.txt
 				mailFunc "Warning"
 			fi 
 		fi
@@ -186,12 +187,16 @@ case "$1" in
 			DELAY="$2"
 		fi
 	;;	
-	-m)
+	-m) #mail mode
 		mailFunc
 		exit 0
 	;;
 	
-	*)	
+	-g) #graph mode 
+		python /usr/lib/rpi_tempmon/rpi_tempmon_2_lib.py
+		exit 0
+	;;
+	*) #invalid option	
 		msgFunc red  "Invalid option!"
 		msgFunc norm "Usage: -l, -L, -v, -h, -c (number of seconds)"
 		msgFunc norm "See README.md for details at webpage:"
