@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import dateutil
+import os
 
 
 __author__ = "Gavin Lyons"
@@ -18,7 +19,8 @@ cpulist =[]
 gpulist = []
 
 #get data from file and put into lists 
-with open("$HOME/.cache/rpi_tempmon/log.txt", 'r') as f:
+mypath = os.environ['HOME'] + "/.cache/rpi_tempmon/log.txt"
+with open(mypath, 'r') as f:
 	for line in f:
 		#if "EPOCH" in line:
 		#	timelist.append(line[8:-1])
