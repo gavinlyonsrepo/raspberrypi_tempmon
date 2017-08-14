@@ -27,6 +27,15 @@ Table of contents
 
 Installation
 -----------------------------------------------
+
+If you are an Arch linux OS user 
+rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
+
+    AUR package name :rpi_tempmon
+    AUR maintainer : glyons
+    AUR location: https://aur.archlinux.org/packages/rpi_tempmon/
+
+For other OS users,
 rpi_tempmon is installed by copying script to an executable 
 path at $PATH and making it executable.
  
@@ -144,12 +153,8 @@ Dependencies
 sSMTP - Simple SMTP
 
 sSMTP is a simple MTA to deliver mail from a computer to a mail hub (SMTP server)
-needed for -m mail option. This is optional. Install from repositories.
+needed for -m mail option. This is optional. Install from OS repositories.
 
-* Install:
-```sh
-$ sudo apt-get install ssmtp
-```
 
 * Config:
 To configure SSMTP, you will have to edit its configuration file 
@@ -161,10 +166,11 @@ If user is using the python modules you must have python 3 installed.
 Furthermore the graph modules requires matplotlib to draw graph
 install as follows:
 
-matplotlib -plotting library 
+matplotlib -plotting library : install from OS repositories.
+or use pip.
 
 ```sh
-$ sudo apt-get install python-matplotlib
+$ sudo pip install matplotlib
 ```
 
 
