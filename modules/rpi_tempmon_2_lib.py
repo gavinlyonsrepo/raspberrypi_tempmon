@@ -18,7 +18,7 @@ cpulist =[]
 gpulist = []
 
 #get data from file and put into lists 
-with open("/home/pi/.cache/rpi_tempmon/log.txt", 'r') as f:
+with open("$HOME/.cache/rpi_tempmon/log.txt", 'r') as f:
 	for line in f:
 		#if "EPOCH" in line:
 		#	timelist.append(line[8:-1])
