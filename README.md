@@ -64,11 +64,7 @@ use LED and graph function. See file section for details.
 
 
 ```sh
-$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/modules /usr/lib/rpi_tempmon
-```
-
-```sh
-$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/modules  /usr/lib/rpi_tempmon
+$ sudo cp $HOME/Downloads/raspberrypi_tempmon-1.3-4/modules/* /usr/lib/rpi_tempmon
 ```
 
 These may need executable permissions depending on your system.
