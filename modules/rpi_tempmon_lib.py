@@ -1,19 +1,15 @@
-'''gavin lyons 120817: called from rpi_tempmon.sh
-tunrs led on and off, Passed LED GPIO pin number and on/off option '''
+#gavin lyons 120817: called from rpi_tempmon.sh
+#turns led on and off, Passed LED GPIO pin number and on/off option.
 
-import RPi.GPIO as GPIO
 import sys
+import RPi.GPIO as GPIO
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-led = int(sys.argv[1])
-GPIO.setup(led,GPIO.OUT)
+LED = int(sys.argv[1])
+GPIO.setup(LED, GPIO.OUT)
 
-if sys.argv[2] == "off" :
-	GPIO.output(led,False)
+if sys.argv[2] == "off":
+    GPIO.output(LED, False)
 else:
-	GPIO.output(led,True)
-
-
-
-
-
+    GPIO.output(LED, True)
