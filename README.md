@@ -2,7 +2,7 @@ Overview
 --------------------------------------------
 * Name: rpi_tempmon 
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 2/3  
-* Description: This bash script will display the ARM CPU and 
+* Description: This python program will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
 features include GPIO LED output, logging, alarm limit, graphing and e-mailing options. 
 The main program is written in python 3.It is run in terminal and alsos uses GUIs for graph modes.
@@ -29,7 +29,11 @@ Installation
 -----------------------------------------------
 
 For other Linux OS users.
-Make sure that python and pip3 have been installed on your machine.then: sudo pip3 install tvdoon
+Make sure that python and pip3 have been installed on your machine.then: 
+
+sh```
+sudo pip3 install tvdoon
+```
 
 If you are an Arch linux OS user 
 rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
@@ -41,7 +45,6 @@ rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR 
 Usage
 -------------------------------------------
 Program is a python 3 package. 
-for some functions.
 
 Run in a terminal by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
 
@@ -53,7 +56,7 @@ Options list (standalone cannot be combined):
 | --------------- | --------------- |
 | -h  | Print help information and exit |
 | -v  | Print version information and exit |
-| -c  | Enters continuous mode, optional number of seconds as a argument eg (-c 5)|
+| -c  | Enters continuous mode, number of seconds as a argument eg (-c 5)|
 | -l  | Creates and/or appends to log file at output folder |
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the log file to an email account |
@@ -71,7 +74,8 @@ rpi_tempmon files needed are listed below:
 | RpiTempmonWork.py| python module containing work functions |
 | RpiTempmonGraph.py | python module dealing with graph output by matplotlib |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, user made, NOT installed |
-| README.md | This readme is also installed |
+| /usr/share/doc/rpi_tempmon/README.md | This readme is also installed |
+
 
 
 Config file: The user MUST create a config file at path in table above.
@@ -93,7 +97,7 @@ The LED must be connected to a RPI GPIO pin as defined by GPIO_LED number.
 
 A dummy config file is available in documentation folder.
 
-Make sure to include the [MAIN] header and all settings just as below or form dummy file.
+Make sure to include the [MAIN] header and all settings just as below or from dummy file.
 
 Settings:
 
