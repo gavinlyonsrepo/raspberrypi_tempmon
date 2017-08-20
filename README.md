@@ -5,7 +5,7 @@ Overview
 * Description: This bash script will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
 features include GPIO LED output, logging, alarm limit, graphing and e-mailing options. 
-The main program is written in python 3.It is run in terminal and alsos uses GUIs fro graph modes.
+The main program is written in python 3.It is run in terminal and alsos uses GUIs for graph modes.
 * Author: Gavin Lyons
 * Website/source: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
 
