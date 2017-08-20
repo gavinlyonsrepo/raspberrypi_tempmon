@@ -31,7 +31,7 @@ Installation
 For other Linux OS users.
 Make sure that python and pip3 have been installed on your machine.then: 
 
-sh```
+```sh
 sudo pip3 install tvdoon
 ```
 
