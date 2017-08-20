@@ -5,9 +5,9 @@ Overview
 * Description: This python program will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
 features include GPIO LED output, logging, alarm limit, graphing and e-mailing options. 
-The main program is written in python 3.It is run in terminal and alsos uses GUIs for graph modes.
+The main program is written in python 3.It is run in terminal and also uses GUIs for graph modes.
 * Author: Gavin Lyons
-* Website/source: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
+* Source: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
 
 Table of contents
 ---------------------------
@@ -28,15 +28,15 @@ Table of contents
 Installation
 -----------------------------------------------
 
-For other Linux OS users.
-Make sure that python and pip3 have been installed on your machine.then: 
+For Linux OS users.
+Make sure that python and pip3 have been installed on your machine then: 
 
 ```sh
 sudo pip3 install tvdoon
 ```
 
 If you are an Arch linux OS user 
-rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
+rpi_tempmon can also be installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
 
     AUR package name :rpi_tempmon
     AUR maintainer : glyons
