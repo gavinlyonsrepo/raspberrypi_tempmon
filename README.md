@@ -32,7 +32,7 @@ For Linux OS users.
 Make sure that python and pip3 have been installed on your machine then: 
 
 ```sh
-sudo pip3 install rpi_tempmon
+sudo pip3 install rpi_tempmon.py
 ```
 
 If you are an Arch linux OS user 
