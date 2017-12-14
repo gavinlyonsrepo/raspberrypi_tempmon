@@ -5,7 +5,7 @@ Overview
 * Description: This bash script will display the ARM CPU and 
 GPU temperature of Raspberry Pi 2/3 
 features include GPIO LED output, logging, alarm limit, graphing and e-mailing options. 
-The main program is written in python 3.It is run in terminal and alsos uses GUIs for graph modes.
+The main program is written in python 3. It is run in terminal and uses GUIs for graph modes.
 * Author: Gavin Lyons
 * Website/source: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
 
@@ -29,10 +29,10 @@ Installation
 -----------------------------------------------
 
 For Linux OS users.
-Make sure that python3 and pip3 have been installed on your machine.then: 
+Make sure that python3 and pip3 have been installed on your machine, then: 
 
 ```sh
-sudo pip3 install tvdoon
+sudo pip3 install rpi_tempmon.py
 ```
 
 If you are an Arch linux OS user 
@@ -116,6 +116,14 @@ Settings:
 >GPIO_LED = 26
 >
 
+RPI_AuthUser = email address to send emails.
+MAIL_ALERT, ALARM MODE and LED_MODE are binary, 1 for on, 0 for off.
+If MAIL_ALERT is 1, mail sent on the alarm triggering(in logfile mode *only*)
+If ALARM_MODE is 1, software triggers the  alarm if CPU tempertaure goes above limit.
+If LED_MODE is 1, the led connected to GPIO_LED is turned on if alarm triggered
+CPU_UPPERLIMIT is limit in centigrade to trigger alarm if CPU temp goes above.
+GPIO_LED is number of a Rapsberry pi GPIO pin, connect an LED to this for alarm status.
+See sections below for more details
 
 Output
 -------------------------------------
@@ -140,7 +148,7 @@ To configure SSMTP, you will have to edit its configuration file
 https://wiki.archlinux.org/index.php/SSMTP
 and remember to configure the rpi_tempmon.cfg as well, see files section.
 
-The graph modules requires pyhton module matplotlib to draw graphs,
+The graph modules requires python module *matplotlib* to draw graphs,
 install as follows:
 
 matplotlib - Plotting library : recommend install version for python 3 
@@ -161,19 +169,21 @@ datetime stamp.
 The program has seven features
 1. Normal mode - output to screen with optional LED output.
 2. Continuous mode - output to screen with optional LED output.
-3. Logfile mode   - output to single logfile(also mail mode if alarm mode on and triggered).
+3. Logfile mode   - output to single logfile(also mail mode if mail alert mode on and triggered).
 4. Logfolder mode - output to multiple logfile in separate folders.
 5. Mail mode  - output to email.
 6. Graph mode - Displays a graph of logfile created in mode 3
 7. Graph mode 2 - Displays a graph of GPU data in realtime
 
 In normal mode output, Data is sent to the terminal with option to repeat or quit. 
-A LED will light and Data in red is displayed in screen for an on Alarm state if setup.
+A LED will light and Data in red is displayed in screen for an Alarm state if setup.
 
 In continuous mode entered by option -c, The program enters a delay between scan.
 This delay is set by positive integer argument placed after -c. 
 For example "-c 30" will wait 30 seconds between scans. 
-Data is sent to terminal screen. A LED will light if on Alarm state is set.
+Data is sent to terminal screen. 
+
+A LED will light if an Alarm state is set.
 If an alarm limit is on and triggered by CPU going above limit, 
 data in red is displayed in screen. 
  
