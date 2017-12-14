@@ -203,7 +203,7 @@ time it is ran and a new log-file put in here. The sub-folder has following synt
 This folder mode does not work with mail or graph mode at present.
 
 Logging modes are designed to be used with UNIX automation like crontab.
-For example this will run logfile mode once an hour, 
+For example this crontab entry will run logfile mode once an hour, 
 Note: The path to executable may differ on each users system.
 
 
