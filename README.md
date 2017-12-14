@@ -28,11 +28,15 @@ Table of contents
 Installation
 -----------------------------------------------
 
-For other Linux OS users.
-Make sure that python and pip3 have been installed on your machine.then: sudo pip3 install tvdoon
+For Linux OS users.
+Make sure that python3 and pip3 have been installed on your machine.then: 
+
+```sh
+sudo pip3 install tvdoon
+```
 
 If you are an Arch linux OS user 
-rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
+rpi_tempmon can be  installed by PKGBUILD. The PKGBUILD file is available in the AUR - Arch user repository. 
 
     AUR package name :rpi_tempmon
     AUR maintainer : glyons
@@ -41,7 +45,7 @@ rpi_tempmon is installed by PKGBUILD. The PKGBUILD file is available in the AUR 
 Usage
 -------------------------------------------
 Program is a python 3 package. 
-for some functions.
+
 
 Run in a terminal by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
 
@@ -71,10 +75,10 @@ rpi_tempmon files needed are listed below:
 | RpiTempmonWork.py| python module containing work functions |
 | RpiTempmonGraph.py | python module dealing with graph output by matplotlib |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, user made, NOT installed |
-| README.md | This readme is also installed |
+| README.md | help file |
 
 
-Config file: The user MUST create a config file at path in table above.
+Config file: The user **MUST** create a config file at path in table above.
 The config file is NOT installed by setup. A dummy config file is available in documentation folder at repositry
 , used  for -m mail option, LED feature and the alarm function. 
 
@@ -93,7 +97,7 @@ The LED must be connected to a RPI GPIO pin as defined by GPIO_LED number.
 
 A dummy config file is available in documentation folder.
 
-Make sure to include the [MAIN] header and all settings just as below or form dummy file.
+Make sure to include the [MAIN] header and all settings just as below or from dummy file.
 
 Settings:
 
@@ -136,8 +140,7 @@ To configure SSMTP, you will have to edit its configuration file
 https://wiki.archlinux.org/index.php/SSMTP
 and remember to configure the rpi_tempmon.cfg as well, see files section.
 
-If user is using the python modules you must have python 3 installed.
-Furthermore the graph modules requires matplotlib to draw graph
+The graph modules requires pyhton module matplotlib to draw graphs,
 install as follows:
 
 matplotlib - Plotting library : recommend install version for python 3 
@@ -200,6 +203,13 @@ time it is ran and a new log-file put in here. The sub-folder has following synt
 This folder mode does not work with mail or graph mode at present.
 
 Logging modes are designed to be used with UNIX automation like crontab.
+For example this will run logfile mode once an hour, 
+Note: The path to executable may differ on each users system.
+
+
+```sh
+0 * * * *  /usr/local/bin/rpi_tempmon.py -l
+```
 
 In mail mode an email is sent using ssmtp. 
 The mail contains the data from logfile mode only it will not work with 

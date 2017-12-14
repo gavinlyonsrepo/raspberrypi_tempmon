@@ -1,5 +1,6 @@
 rpiTempSrc/__pycache__
-rpiTempMon/__pycache__
+rpiTempMod/__pycache__
+rpiTempMod/*.pyc
 dist/
 build/
 rpi_tempmon.py.egg-info/
