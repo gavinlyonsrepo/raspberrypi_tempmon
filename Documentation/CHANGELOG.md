@@ -16,3 +16,7 @@ Version control history:
 * Version 1.4-5 200817
 	* Code rewritten complete in python3 (from a mixture of bash and python)
 	* Graph of realtime CPU data added
+
+* Version 1.5-6 220318
+	* Changes to graph modes due to matplotlib upgrade 2.2.2 causing display issues
+	* -a data mode and -n notify mode added.

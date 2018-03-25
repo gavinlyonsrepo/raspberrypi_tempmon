@@ -4,3 +4,4 @@ rpiTempMod/*.pyc
 dist/
 build/
 rpi_tempmon.py.egg-info/
+stuff/

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 module imported into rpi_tempmon contains functions related
 containg a class with methods to display graphs from matlib
@@ -10,14 +11,16 @@ import matplotlib.dates as md
 import dateutil
 
 
+
 def plot_now_func(tempg):
     """called from method graph_live_data to draw graph"""
     plt.clf()
-    plt.ylim(15, 90)
-    plt.title('Raspberry Pi core temperture')
+    # plt.ylim(15,90) # had to comment out after matplotlib upgrade
+    plt.title('Raspberry Pi core temperture', color='green')
     plt.grid(True)
-    plt.ylabel("Temperature ('C)")
-    plt.plot(tempg, color='red', marker='*', label="GPU")
+    plt.ylabel("Temperature ('C)", color='red')
+    plt.xlabel("Time (last 25 seconds)", color='red')
+    plt.plot(tempg, color='blue', marker='*', label="GPU")
     plt.legend(loc='upper right', fancybox=True, shadow=True)
     plt.show()
 
@@ -49,9 +52,14 @@ class MatplotGraph(object):
         else:
             print("Log file not found at {}".format(mypath))
             return 1
-        #parse dates format
+        # convert to ints as strings cause issue with graph in new matlib version
+        cpulist = list(map(float, cpulist))
+        gpulist = list(map(float, gpulist))
+        # parse dates format
         mydates = [dateutil.parser.parse(s) for s in timelist]
-        #make graph matplotlib from logfile
+        # make graph matplotlib from logfile
+        cpulist = list(map(int, cpulist))
+        gpulist = list(map(int, gpulist))
         plt.xticks(rotation=25)
         plt.subplots_adjust(bottom=0.2)
         axisx = plt.gca()
@@ -77,7 +85,7 @@ class MatplotGraph(object):
 
         #pre-load dummy data
         for i in range(0, 26):
-            tempg.append(0)
+            tempg.append(35)
 
         while True:
             #GPU
@@ -88,10 +96,17 @@ class MatplotGraph(object):
             #plot graph pass function temp
             plot_now_func(tempg)
             plt.pause(1)
-            
-def test():
-    """ docstring """
+
+def importtest(text):
+    """import print test statement"""
     pass
+    # print(text)
+
+# ===================== MAIN ===============================
 
 if __name__ == '__main__':
-    test()
+    importtest("main")
+else:
+    importtest("Imported {}".format(__name__))
+
+# ===================== END ===============================

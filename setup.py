@@ -2,14 +2,14 @@ from setuptools import setup
 
 setup(
     name="rpi_tempmon.py",
-    version="1.4",
+    version="1.5",
     author="gavin lyons",
     author_email="glyons66@hotmail.com",
     description="Display the ARM CPU and GPU temperature of Raspberry Pi",
     license=" GPL",
     keywords="PI Raspberry CPU ARM GPU,temperature",
     url="https://github.com/gavinlyonsrepo/raspeberrypi_tempmon",
-    download_url='https://github.com/gavinlyonsrepo/raspeberrypi_tempmon/archive/1.4.tar.gz',
+    download_url='https://github.com/gavinlyonsrepo/raspeberrypi_tempmon/archive/1.5.tar.gz',
     packages=['rpiTempSrc','rpiTempMod',],
     install_requires= ['matplotlib','pip'],
     setup_requires = ['pip'],

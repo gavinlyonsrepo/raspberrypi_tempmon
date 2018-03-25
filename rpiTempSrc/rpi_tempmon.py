@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """python script to display the ARM CPU and GPU temperature of Raspberry Pi 3"""
-#=========================HEADER=======================================
+# ========================HEADER=======================================
 # title             :rpi_tempmon.py
 # description       :python script to display the ARM CPU and GPU temperature of Raspberry Pi 3
 # author            :Gavin Lyons
-# date              :17/08/2017
-# version           :1.4-5
+# intial date       :17/08/2017
+# version           :1.5-6
 # web               :https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
 # mail              :glyons66@hotmail.com
-# python_version    :3.6.0
+# python version    :3.4.2
 
-#==========================IMPORTS======================
+# =========================IMPORTS======================
 # Import the system modules needed to run rpi_tempmon.py.
 import sys
 import os
@@ -18,30 +18,21 @@ import datetime
 import argparse
 import configparser
 import time
-import socket #hostname
+import socket # for hostname
 
-#my modules
+# my modules
 from rpiTempMod import RpiTempmonWork as Work
 from rpiTempMod import RpiTempmonGraph
 
 
-#=======================GLOBALS=========================
+# =======================GLOBALS=========================
 
-#colours for printf
-BLUE = '\033[94m'
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-RED = '\033[91m'
-BOLD = '\033[1m'
-UNDERLINE = '\033[4m'
-END = '\033[0m'
-
-#set the path for logfile
+# set the path for logfile
 DESTLOG = os.environ['HOME'] + "/.cache/rpi_tempmon"
 if not os.path.exists(DESTLOG):
     os.makedirs(DESTLOG)
 
-#set the path for config file
+# set the path for config file
 DESTCONFIG = os.environ['HOME'] + "/.config/rpi_tempmon"
 if not os.path.exists(DESTCONFIG):
     os.makedirs(DESTCONFIG)
@@ -50,13 +41,14 @@ if os.path.isfile(DESTCONFIG):
     pass
 else:
     print("Config file is missing at {}".format(DESTCONFIG))
+    print("User must create a config file")
     print("See https://github.com/gavinlyonsrepo/raspeberrypi_tempmon or readme.md")
     quit()
 
 #version
-VERSION = "1.4"
+VERSION = "1.5"
 
-#====================FUNCTION SECTION===============================
+# ===================FUNCTION SECTION===============================
 
 
 def msg_func(myprocess, mytext):
@@ -68,33 +60,37 @@ def msg_func(myprocess, mytext):
     [3] print text  "green , red ,blue , norm yellow and highlight" [4] yn prompt,
     OUTPUT yesno prompt return 1 or 0"""
 
+    # colours for printf
+    blue = '\033[94m'
+    green = '\033[92m'
+    yellow = '\033[93m'
+    red = '\033[91m'
+    bold = '\033[1m'
+    end = '\033[0m'
     mychoice = ""
 
-    if myprocess == "line": #print blue horizontal line of =
-        print(BLUE + "="*80 + END)
+    if myprocess == "line": # print blue horizontal line of =
+        print(blue + "="*80 + end)
 
     if myprocess == "anykey":
         input("Press <Enter> to continue" + " " + mytext)
 
-    if myprocess == "green": #print green text
-        print(GREEN + mytext + END)
+    if myprocess == "green": # print green text
+        print(green + mytext + end)
 
-    if myprocess == "red": #print red text
-        print(RED + mytext + END)
+    if myprocess == "red": # print red text
+        print(red + mytext + end)
 
-    if myprocess == "blue": #print blue text
-        print(BLUE + mytext + END)
+    if myprocess == "blue": # print blue text
+        print(blue + mytext + end)
 
-    if myprocess == "yellow": #print yellow text
-        print(YELLOW + mytext + END)
+    if myprocess == "yellow": # print yellow text
+        print(yellow + mytext + end)
 
-    if myprocess == "bold": #print yellow text
-        print(BOLD + mytext + END)
+    if myprocess == "bold": # print bold text
+        print(bold + mytext + end)
 
-    if myprocess == "underline": #print yellow text
-        print(UNDERLINE + mytext + END)
-
-    if myprocess == "yesno": #yes no prompt loop
+    if myprocess == "yesno": # yes no prompt loop
         while True:
             mychoice = input("Repeat ? [y/n]")
             if mychoice == "y":
@@ -102,7 +98,7 @@ def msg_func(myprocess, mytext):
             elif mychoice == "n":
                 return  0
             else:
-                print(YELLOW +  "Please answer: y for yes OR n for no!" + END)
+                print(yellow +  "Please answer: y for yes OR n for no!" + end)
 
 
 def exit_handler_func():
@@ -118,7 +114,7 @@ def exit_handler_func():
     quit()
 
 def process_cmd_arguments():
-    """Function for processing command line arguments."""
+    """Function for processing CL arguments return tuple of 4 values to main"""
     parser = argparse.ArgumentParser(description='Display the CPU & GPU temps of Raspberry Pi')
     parser.add_argument(
         '-v', help='Print rpi_tempmon version and quit',
@@ -148,100 +144,151 @@ def process_cmd_arguments():
         '-c', help='Continuous mode, + integer arg in secs for delay time',
         type=int, dest='cont')
 
+    parser.add_argument(
+        '-a', help='Analysis the log file and report',
+        default=False, dest='data', action='store_true')
+
+    parser.add_argument('-n', help='notify mode +int arg, 2=notify always ,\
+    3=notify only on Cpu limit exceed', type=int, dest='notify')
+
     args = parser.parse_args()
 
-    #check the args that don't need config file
-    #display version
+    #read config file and unpack tuple with values, pack a new tuple for main.
+    config_file_data = read_configfile_func()
+    mailuser, mail_alert, alarm_mode, cpu_limit, led_mode, led_num = config_file_data
+    config_file_data_main = config_file_data[2:6]
+    
+    #check the args
+    if not len(sys.argv) > 1:
+        # no argument > back to main 
+        return config_file_data_main
+
+    if args.cont:
+        # cont mode > back to main
+        return config_file_data_main
+
     if args.version:
         msg_func("bold", "rpi_tempmon " + VERSION)
-        quit()
+
     if args.logfolder:
-        #call log function pass L
-        Work.logging_func("L", "0", "100", "X", DESTLOG)
-        quit()
+        # call log function pass L for folder
+        Work.logging_func("L", "0", "100", "X", DESTLOG, False)
 
-    return args
+    if args.data:
+        # call the data analysis function
+        Work.data_func(DESTLOG)
 
-def main(args):
-    """Function to hold main program loop, passed command line arguments"""
-    scan_count = 0
-    mygraph = RpiTempmonGraph.MatplotGraph("gavin")
-    #read in configfile
-    myconfigfile = configparser.ConfigParser()
-    myconfigfile.read(DESTCONFIG)
-    mailuser = myconfigfile.get("MAIN", "RPI_AuthUser")
-    mail_alert = myconfigfile.get("MAIN", "MAIL_ALERT")
-    alarm_mode = myconfigfile.get("MAIN", "ALARM_MODE")
-    cpu_limit = myconfigfile.get("MAIN", "CPU_UPPERLIMIT")
-    led_mode = myconfigfile.get("MAIN", "LED_MODE")
-    led_num = myconfigfile.get("MAIN", "GPIO_LED")
-    
-    #check arguments list
     if args.logfile:
-        #call log function pass l
-        Work.logging_func("l", mail_alert, cpu_limit, mailuser, DESTLOG)
-        return 0
+        # call log function pass l for file
+        Work.logging_func("l", mail_alert, cpu_limit, mailuser, DESTLOG, alarm_mode)
+
+    if args.notify:
+        Work.notify_func(sys.argv[2], cpu_limit)
 
     if args.mail:
-        #mail mode
+        # mail mode
         Work.mail_func(" Mail mode ", mailuser, DESTLOG)
-        return 0
 
     if args.graphlog:
+        mygraph = RpiTempmonGraph.MatplotGraph("graphlog")
         mygraph.graph_log_data(DESTLOG)
-        return 0
+
     if args.graphlive:
+        mygraph = RpiTempmonGraph.MatplotGraph("graphlive")
         mygraph.graph_live_data()
-        return 0
-    #main loop
+
+    quit()
+
+
+def print_title_func():
+    """function to print title in normal and cont mode"""
+    os.system('clear')
+    print()
+    msg_func("line", "")
+    today = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
+    msg_func("bold", "Raspberry pi CPU GPU temperature monitor program")
+    print(today)
+    print(socket.gethostname())
+    msg_func("line", "")
+    msg_func("green", "CPU temperature => " + Work.get_cpu_tempfunc() + ".0'C")
+    msg_func("green", "GPU temperature => " + Work.get_gpu_tempfunc())
+
+
+def read_configfile_func():
+    """read in configfile, return 6 values in a tuple"""
+    try:
+        myconfigfile = configparser.ConfigParser()
+        myconfigfile.read(DESTCONFIG)
+        mailuser = myconfigfile.get("MAIN", "RPI_AuthUser")
+        mail_alert = myconfigfile.get("MAIN", "MAIL_ALERT")
+        alarm_mode = myconfigfile.get("MAIN", "ALARM_MODE")
+        cpu_limit = myconfigfile.get("MAIN", "CPU_UPPERLIMIT")
+        led_mode = myconfigfile.get("MAIN", "LED_MODE")
+        led_num = myconfigfile.get("MAIN", "GPIO_LED")
+        if (int(cpu_limit) < 1) or  (int(cpu_limit) > 99):
+            msg_func("red", "  ERROR : ")
+            print("CPU_UPPERLIMIT must be between 1 and 99")
+            quit()
+        config_file_data = (mailuser, mail_alert, alarm_mode, cpu_limit, led_mode, led_num)
+    except Exception as error:
+        msg_func("red", "  ERROR : ")
+        print("Problem with config file: {}".format(error))
+        print("\nSee https://github.com/gavinlyonsrepo/raspeberrypi_tempmon or readme.md")
+        print("Must have section header of [MAIN] and six parameters")
+        quit()
+
+    return  config_file_data
+
+
+def main(config_file_data_main):
+    """Function to hold main program loop, config file data tuple"""
+    # unpack config file data main tuple
+    alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
+
+    scan_count = 0
+    # main loop
     try:
         while True:
-        #clear screen
-            os.system('clear')
-            print()
-            msg_func("line", "")
-            today = datetime.datetime.today()
-            print(today)
-            print(socket.gethostname())
-            msg_func("line", "")
-            msg_func("green", "CPU temperature => " + Work.get_cpu_tempfunc() + ".0'C")
-            msg_func("green", "GPU temperature => " + Work.get_gpu_tempfunc())
-        
+
+            print_title_func()
             delay = 5
             scan_count += 1
             msg_func("bold", "Number of scans: " + str(scan_count))
-            #display alarm mode
+            # check for  alarm mode
             if alarm_mode == "1":
                 msg_func("bold", "Alarm mode is on: " + cpu_limit)
                 if Work.get_cpu_tempfunc() > cpu_limit:
-                    #display led mode
+                    # display led mode
                     msg_func("red", "Warning : cpu over the temperature limit:  " + cpu_limit)
                     if led_mode == "1":
                         msg_func("bold", "LED mode is on, GPIO pin selected: " + led_num)
                         Work.led_toggle_func("on", led_num)
-            #check for continuous mode
-            if args.cont:
-                val = int(sys.argv[2])
-                if val < 0:  # if not a positive int print message and ask for input again
-                    print("Sorry, input must be a positive integer, try again")
-                    quit()
-                delay = sys.argv[2]
-                msg_func("bold", "Continuous mode is on")
-                msg_func("bold", "Sleep delay set to seconds: " + str(delay) + " Press CTRL+c to quit.")
-                time.sleep(float(delay))
-                os.system('clear')
-            else:
+
+            # check for continuous mode
+            if len(sys.argv) > 1: # is their an argument?
+                if sys.argv[1] == "-c": # Was it -c?
+                    val = int(sys.argv[2])
+                    if val < 0:  # if not a positive int print message and ask for input again
+                        print("Sorry, input to -c  must be a positive integer.")
+                        quit()
+                    delay = sys.argv[2]
+                    msg_func("bold", "Continuous mode is on.")
+                    msg_func("bold", "Sleep delay set to seconds: " + str(delay))
+                    msg_func("bold", "Press CTRL+c to quit.")
+                    time.sleep(float(delay))
+                    os.system('clear')
+            else: # normal mode prompt
                 if msg_func("yesno", ""):
                     pass
                 else:
                     Work.led_toggle_func("off", led_num)
                     exit_handler_func()
-        
-            #call led function off
+
+            # call led function off
             Work.led_toggle_func("off", led_num)
     except (KeyboardInterrupt):
         Work.led_toggle_func("off", led_num)
-#=====================MAIN===============================
+# =====================MAIN===============================
 if __name__ == "__main__":
     try:
         exit(main(process_cmd_arguments()))
