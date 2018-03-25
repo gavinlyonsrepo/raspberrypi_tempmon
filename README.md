@@ -178,7 +178,7 @@ depending on system. for example
 Features
 ----------------------
 
-This software was tested ona rapsberry pi 3 model B, 
+This software was tested on a raspberry pi 3 model B, 
 running Raspbian 8.0 jessie, LXDE lxpanel 0.7.2.
 
 For a raspberry pi the official operating temperature limit is 85°C, 
@@ -217,15 +217,17 @@ Data is sent to terminal screen.
 The GPIO pin in config file will be turned on 
 and Data in red is displayed in screen for an Alarm state, if  setup in config file. 
  
-![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshot/main_screen.jpg)
+![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/main_screen.jpg)
  
 **3. & 4. Log  modes**
- 
-For mode 3 an email is sent using mode 5 function, 
-but with warning in title.
+
 
 In logfile mode the data is appended into a file log.txt at output folder. 
- With optional mail setup if alarm mode setup. Sample output of logfile:
+With optional mail setup if alarm mode setup. For mode 3 an email
+is sent using mode 5 function, 
+but with warning in title.
+ 
+ Sample output of logfile:
  
 ```sh
 Raspberry pi temperature monitor: raspberrypi
@@ -271,12 +273,12 @@ creates a plot of data of GPU and CPU versus time/date stamp
 the logfile.txt created by logfile mode 3.
 
  
-![graph mode 1](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshot/graphmode1.jpg)
+![graph mode 1](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode1.jpg)
 
 In graph mode 2 the program  creates a plot of data of GPU 
 versus realtime.
 
-![graph mode 2](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshot/graphmode2.jpg)
+![graph mode 2](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode2.jpg)
 
 
 **8. data mode**
@@ -290,7 +292,7 @@ Send notifications to desktop, Numbered argument to define behaviour
 * -n 2 = argument 2 = If run always display CPU temperature 
 * -n 3 = argument 3 = If run only display if CPU temperature exceeds limit
 
-![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshot/nyalarm.jpg)
+![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/nyalarm.jpg)
 
 See Also
 -----------
