@@ -66,9 +66,9 @@ Options list (standalone cannot be combined):
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the log file to an email account |
 | -g  | graph mode, Generate a menu where six types of graphs can be selected |
-| -a  | parse log file and produce a data report |
+| -a  | parse log file and produces a data report in terminal |
 | -n  | send notifications to desktop, Number argument to define behaviour |
-| -s  | parses log.txt and converts it to log.csv for external use |
+| -s  | CSV mode , parses log.txt and converts it to log.csv,  CSV file |
 
 Files and setup
 -----------------------------------------
@@ -77,7 +77,7 @@ rpi_tempmon files needed are listed below:
 | File Path | Description |
 | ------ | ------ |
 | rpi_tempmon.py | The main python script |
-| RpiTempmonWork.py| python module containing work functions |
+| RpiTempmonWork.py| python module containing various utility functions used by main |
 | RpiTempmonGraph.py | python module dealing with graph output by matplotlib |
 | $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, user made, NOT installed |
 | README.md | help file |
@@ -196,7 +196,7 @@ $ sudo pip3 install psutil
 
 # or
 
-$ sudo apt install udo apt install python3-psutil
+$ sudo apt install python3-psutil
 ```
 
 Features
@@ -207,7 +207,7 @@ Features
 For a raspberry pi the official operating temperature limit is 85°C, 
 and as a result the Raspberry Pi should start to thermally throttle 
 performance around 82°C. The GPU and CPU are closely correlated
-to within a degree.
+to within a degree usually.
 
 The program calculates the ARM CPU and GPU temperature of 
 a Raspberry Pi and outputs them in Centigrade together with
@@ -233,8 +233,7 @@ and Data in red is displayed in screen for an Alarm state, if setup in config fi
 
 **2. Continuous mode**
 
-Same as 
-In continuous mode entered by option -c, The program enters a delay between scan.
+Same as normal mode except in continuous mode. The program enters a delay between scan.
 This delay is set by positive integer argument placed after -c. 
 For example "-c 30" will wait 30 seconds between scans. 
 Data is sent to terminal screen. 
@@ -292,7 +291,7 @@ config file which should be set up just for root account.
 
 In graph mode, the program using matplotlib (plotting library) 
 creates a plot of various data versus time.
-Note: Will not work with log files containing data older than version 2.0
+Note: Will not work with log files containing data older than version 2.0.
 The logfile.txt created by logfile mode 3 is used for data for graph 1-4.
 The graphs 5-6 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
