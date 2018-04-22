@@ -294,7 +294,7 @@ points across multiple dates.
 The graphs 9-11 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
 
-![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphoptionsmenu.jpg.jpg)  
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphoptionsmenu.jpg)  
 
 Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
 
@@ -319,7 +319,7 @@ sample output = time-data, CPU temp, GPU temp, CPU usage , RAM usage , swap usag
 
 **8. data mode**
 
-Parses log file created by logfile mode 3 and produces a small data report.
+Parses log file created by logfile mode 3 and produces a data report on console.
 
 **9. notify mode**
 
@@ -338,7 +338,7 @@ The test request consists in calculation of prime numbers up to a value of 20000
 All calculations are performed using 64-bit integers. 4 worker threads are created.
 The number of test runs is passed on command line as integer max 50 min 2.
 CPU temperature and freq are recorded for eahc test run and are outputed to a csv file,
-called stresslog.csv .
+called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
 
 ```sh
 1,56.9,27.1
