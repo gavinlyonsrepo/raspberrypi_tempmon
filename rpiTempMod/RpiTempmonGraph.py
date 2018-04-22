@@ -71,7 +71,7 @@ class MatplotGraph(object):
                             plotlabel1, plotlabel2, ylabel, title)
         elif (self.selection == '4' or self.selection == '8'):
             plotlabel1 = 'CPU'
-            ylabel = 'Memory (% used)'
+            ylabel = 'CPU (% used)'
             title = 'CPU usage of RPi'
             self.draw_graph(yaxislist, cpu_uselist, False,
                             plotlabel1, False, ylabel, title)
