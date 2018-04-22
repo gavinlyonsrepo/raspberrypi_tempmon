@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
-"""python script to display the CPU &  GPU temperature of Raspberry Pi """
+"""
 # ========================HEADER=======================================
 # title             :rpi_tempmon.py
 # description       :python script to display the CPU & GPU temp of RPi
 # author            :Gavin Lyons
 # intial date       :17/08/2017
-# version           :2.0-1
-# web               :https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
+# web url           :https://github.com/gavinlyonsrepo/raspberrypi_tempmon
 # mail              :glyons66@hotmail.com
 # python version    :3.4.2
-
+# Functions:
+(1) exit_handler_func: exit handler function
+(2) stresstest_func: stresstest function
+(3) process_cmd_arguments: process command line arguments
+(4) print_title_func: prints title to console
+(5) read_configfile_func: read in config file
+(6) alarm_mode_check: checks for alarm condition
+(7) cont_mode_check: checks for continuous mode
+(8) main: main program loop
+"""
 # =========================IMPORTS======================
 # Import the system modules needed to run rpi_tempmon.py.
 import sys
@@ -26,6 +34,9 @@ from rpiTempMod import RpiTempmonGraph
 
 
 # =======================GLOBALS=========================
+# metadata
+__VERSION__ = "2.1"
+__URL__ = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
 
 # set the path for logfile
 DESTLOG = os.environ['HOME'] + "/.cache/rpi_tempmon"
@@ -41,84 +52,42 @@ if os.path.isfile(DESTCONFIG):
     pass
 else:
     print("Config file is missing at {}".format(DESTCONFIG))
-    print("User must create a config file see url:-")
-    print("https://github.com/gavinlyonsrepo/raspeberrypi_tempmon")
+    print("User must create a config file, See url:-")
+    print("Example config file and info can be found at")
+    print(__URL__)
     quit()
 
-# Version
-VERSION = "2.0"
 
 # ===================FUNCTION SECTION===============================
 
 
-def msg_func(myprocess, mytext):
-    """NAME : msg_func
-    DESCRIPTION :prints to screen
-    prints line, text and anykey prompts, yesno prompt
-    INPUTS : $1 process name $2 text input
-    PROCESS :[1]  print line [2] anykey prompt
-    [3] print text  "green , red ,blue , norm yellow and highlight"
-     [4] yn prompt,
-    OUTPUT yesno prompt return 1 or 0"""
-
-    # colours for printf
-    blue = '\033[94m'
-    green = '\033[92m'
-    yellow = '\033[93m'
-    red = '\033[91m'
-    bold = '\033[1m'
-    end = '\033[0m'
-    mychoice = ""
-
-    if myprocess == "line":  # print blue horizontal line of =
-        print(blue + "="*80 + end)
-
-    if myprocess == "anykey":
-        input("Press <Enter> to continue" + " " + mytext)
-
-    if myprocess == "green":  # print green text
-        print(green + mytext + end)
-
-    if myprocess == "red":  # print red text
-        print(red + mytext + end)
-
-    if myprocess == "blue":  # print blue text
-        print(blue + mytext + end)
-
-    if myprocess == "yellow":  # print yellow text
-        print(yellow + mytext + end)
-
-    if myprocess == "bold":  # print bold text
-        print(bold + mytext + end)
-
-    if myprocess == "yesno":  # yes no prompt loop
-        while True:
-            mychoice = input("Repeat ? [y/n]")
-            if mychoice == "y":
-                choice = 1
-                return choice
-            elif mychoice == "n":
-                choice = 0
-                return choice
-            else:
-                print(yellow + "Please answer: y for yes OR n for no!" + end)
-
-    return 2
-
-
 def exit_handler_func(led_num):
     """Handle the program exit"""
-    msg_func("bold", "\nGoodbye " + os.environ['USER'])
-    msg_func("anykey", " and exit.")
     # code to switch off the LED before shutdown
-    Work.led_toggle_func("off", led_num)
+    if not led_num == 0:
+        Work.led_toggle_func("off", led_num)
+    # Print exit message
+    print("\nGoodbye " + os.environ['USER'])
+    Work.msg_func("bold", "Endex")
     quit()
+
+
+def stresstest_func(testrun_count):
+    """Call stresstest  function and display stress test graph choice"""
+    print(DESTLOG)
+    yaxislist, cpulist, cpu_uselist, plotlabel1, \
+        plotlabel2, ylabel, title = Work.stresstest(DESTLOG, testrun_count)
+    mychoice = input("\nDo you want to view graph of stress test? [y/N]")
+    if (mychoice == "y") or (mychoice == "Y"):
+        mygraph = RpiTempmonGraph.MatplotGraph("RPi Tempmon :")
+        mygraph.draw_graph(yaxislist, cpulist, cpu_uselist,
+                           plotlabel1, plotlabel2, ylabel, title)
 
 
 def process_cmd_arguments():
     """Function for processing CL arguments
     return tuple of 4 values to main"""
-    str_desc = 'Display the CPU & GPU temps of Raspberry Pi'
+    str_desc = "URL help at: {}".format(__URL__)
     parser = argparse.ArgumentParser(description=str_desc)
     parser.add_argument(
         '-v', help='Print rpi_tempmon version and quit',
@@ -155,6 +124,10 @@ def process_cmd_arguments():
     parser.add_argument('-n', help='notify mode +int arg, 2=notify always ,\
     3=notify only on Cpu limit exceed', type=int, dest='notify')
 
+    parser.add_argument(
+        '-ST', help='Stress test mode, + integer arg for number of runs',
+        type=int, dest='stresstest')
+
     args = parser.parse_args()
 
     # read config file
@@ -173,8 +146,11 @@ def process_cmd_arguments():
         # cont mode > back to main
         return config_file_data_main
 
+    if args.stresstest:
+        stresstest_func(sys.argv[2])
+
     if args.version:
-        msg_func("bold", "rpi_tempmon " + VERSION)
+        Work.msg_func("bold", "\nVersion : rpi_tempmon " + __VERSION__)
 
     if args.csv_convert:
         Work.csv_convert(DESTLOG)
@@ -199,27 +175,27 @@ def process_cmd_arguments():
         Work.mail_func(" Mail mode ", mailuser, DESTLOG)
 
     if args.graphlog:
-        mygraph = RpiTempmonGraph.MatplotGraph("graphlog")
+        mygraph = RpiTempmonGraph.MatplotGraph("RPi Tempmon :")
         mygraph.graph_log_data(DESTLOG)
 
-    quit()
+    exit_handler_func(0)
 
 
 def print_title_func():
     """Function to print title in normal and cont mode"""
     os.system('clear')
     print()
-    msg_func("line", "")
+    Work.msg_func("line", "")
     today = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
-    msg_func("bold", "Raspberry pi CPU GPU temperature monitor program")
+    Work.msg_func("bold", "Raspberry pi CPU GPU temperature monitor program")
     print(today)
     print(socket.gethostname())
-    msg_func("line", "")
-    msg_func("green", "CPU temp => {}'C".format(Work.get_cpu_tempfunc()))
-    msg_func("green", "GPU temp => {}".format(Work.get_gpu_tempfunc()))
-    msg_func("green", "CPU usage => {}%".format(Work.get_cpu_use()))
-    msg_func("green", "RAM usage => {}%".format(Work.get_ram_info()))
-    msg_func("green", "Swap usage => {}% \n".format(Work.get_swap_info()))
+    Work.msg_func("line", "")
+    Work.msg_func("green", "CPU temp => {}'C".format(Work.get_cpu_tempfunc()))
+    Work.msg_func("green", "GPU temp => {}".format(Work.get_gpu_tempfunc()))
+    Work.msg_func("green", "CPU usage => {}%".format(Work.get_cpu_use()))
+    Work.msg_func("green", "RAM usage => {}%".format(Work.get_ram_info()))
+    Work.msg_func("green", "Swap usage => {}% \n".format(Work.get_swap_info()))
 
 
 def read_configfile_func():
@@ -234,16 +210,17 @@ def read_configfile_func():
         led_mode = myconfigfile.get("MAIN", "LED_MODE")
         led_num = myconfigfile.get("MAIN", "GPIO_LED")
         if (int(cpu_limit) < 1) or (int(cpu_limit) > 99):
-            msg_func("red", "  ERROR : ")
+            Work.msg_func("red", "  ERROR : ")
             print("CPU_UPPERLIMIT must be between 1 and 99")
             quit()
         config_file_data = (mailuser, mail_alert, alarm_mode, cpu_limit, led_mode, led_num)
     except Exception as error:
-        msg_func("red", "  ERROR : ")
+        Work.msg_func("red", "  ERROR : ")
         print("Problem with config file: {}".format(error))
-        print("\nhttps://github.com/gavinlyonsrepo/raspeberrypi_tempmon")
         print("Must have section header of [MAIN] and six parameters")
-        quit()
+        print("Help and exmaple file at url")
+        print(__URL__)
+        exit_handler_func(0)
 
     return config_file_data
 
@@ -252,12 +229,12 @@ def alarm_mode_check(config_file_data_main):
     """function to check alarm mode """
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
     if alarm_mode == "1":
-        msg_func("bold", "Alarm mode is on: " + cpu_limit)
+        Work.msg_func("bold", "Alarm mode is on: " + cpu_limit)
         if Work.get_cpu_tempfunc() > cpu_limit:
             # display led mode
-            msg_func("red", "Warning : cpu over the temperature limit: " + cpu_limit)
+            Work.msg_func("red", "Warning : cpu over the temperature limit: " + cpu_limit)
             if led_mode == "1":
-                msg_func("bold", "LED mode is on, GPIO pin selected: " + led_num)
+                Work.msg_func("bold", "LED mode is on, GPIO pin selected: " + led_num)
                 Work.led_toggle_func("on", led_num)
 
 
@@ -274,13 +251,13 @@ def cont_mode_check(led_num):
                 print("Sorry, input to -c  must be a positive integer.")
                 quit()
             delay = sys.argv[2]
-            msg_func("bold", "Continuous mode is on.")
-            msg_func("bold", "Sleep delay set to seconds: " + str(delay))
-            msg_func("bold", "Press CTRL+c to quit.")
+            Work.msg_func("bold", "Continuous mode is on.")
+            Work.msg_func("bold", "Sleep delay set to seconds: " + str(delay))
+            Work.msg_func("bold", "Press CTRL+c to quit.")
             time.sleep(float(delay))
             os.system('clear')
     else:  # normal mode prompt
-        if msg_func("yesno", ""):
+        if Work.msg_func("yesno", ""):
             pass
         else:
             exit_handler_func(led_num)
@@ -290,7 +267,6 @@ def main(config_file_data_main):
     """Function to hold main program loop, config file data tuple"""
 
     # unpack config file data main tuple
-    # led_num = config_file_data_main[3]
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
 
     scan_count = 0
@@ -299,7 +275,7 @@ def main(config_file_data_main):
         while True:
             print_title_func()
             scan_count += 1
-            msg_func("bold", "Number of scans: " + str(scan_count))
+            Work.msg_func("bold", "Number of scans: " + str(scan_count))
             # check for  alarm mode
             alarm_mode_check(config_file_data_main)
             # check for continuous mode
@@ -313,6 +289,7 @@ def main(config_file_data_main):
 # =====================MAIN===============================
 if __name__ == "__main__":
     try:
+        print("\nRPi temperature monitor:")
         exit(main(process_cmd_arguments()))
     except (KeyboardInterrupt, SystemExit):
         pass

@@ -1,0 +1,72 @@
+TS = 18-04-20 23:35:15
+EP = 1524263715.0
+GPU temperature = 50.5'C
+CPU temperature = 49.9
+Cpu usage = 25.7
+RAM usage = 42.3
+Swap usage = 58.8
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-20 23:35:21
+EP = 1524263722.0
+GPU temperature = 50.5'C
+CPU temperature = 50.5
+Cpu usage = 29.1
+RAM usage = 42.0
+Swap usage = 58.8
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-20 23:36:10
+EP = 1524263771.0
+GPU temperature = 50.5'C
+CPU temperature = 50.5
+Cpu usage = 25.4
+RAM usage = 42.3
+Swap usage = 58.8
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-20 23:38:27
+EP = 1524263907.0
+GPU temperature = 50.5'C
+CPU temperature = 50.5
+Cpu usage = 25.1
+RAM usage = 42.7
+Swap usage = 58.7
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-20 23:39:02
+EP = 1524263943.0
+GPU temperature = 50.5'C
+CPU temperature = 50.5
+Cpu usage = 25.7
+RAM usage = 42.7
+Swap usage = 58.7
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-21 00:03:38
+EP = 1524265419.0
+GPU temperature = 55.8'C
+CPU temperature = 55.8
+Cpu usage = 31.8
+RAM usage = 67.0
+Swap usage = 66.1
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-21 00:59:54
+EP = 1524268794.0
+GPU temperature = 53.7'C
+CPU temperature = 53.7
+Cpu usage = 25.5
+RAM usage = 52.7
+Swap usage = 86.9
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-21 14:35:29
+EP = 1524317730.0
+GPU temperature = 58.0'C
+CPU temperature = 58.5
+Cpu usage = 45.2
+RAM usage = 79.9
+Swap usage = 75.2
+Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-21 14:39:51
+EP = 1524317992.0
+GPU temperature = 56.9'C
+CPU temperature = 57.5
+Cpu usage = 46.5
+RAM usage = 80.5
+Swap usage = 90.2
+Raspberry pi temperature monitor: raspberrypi 

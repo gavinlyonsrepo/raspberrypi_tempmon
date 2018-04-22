@@ -5,7 +5,7 @@ Overview
 * Description: This python program will display the ARM CPU and 
 GPU temperature of a Raspberry Pi 2/3 
 features include command line display, GPIO (LED) output, logging, alarm limit, 
-graphing,  desktop notification and e-mailing options. 
+graphing,  desktop notification, stress tests and e-mailing options. 
 The program is written in python 3. It is run in terminal and uses matplotlib 
 plots for graph modes. This software was built and tested on a raspberry pi 3 model B, 
 running Linux, Raspbian 8.0 jessie, LXDE lxpanel 0.7.2, Python 3.4.2.
@@ -50,7 +50,6 @@ Usage
 -------------------------------------------
 Program is a python 3 package. 
 
-
 Run in a terminal by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
 
 rpi_tempmon.py -[options][arguments]
@@ -65,10 +64,11 @@ Options list (standalone cannot be combined):
 | -l  | Creates and/or appends to log file at output folder |
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the log file to an email account |
-| -g  | graph mode, Generate a menu where six types of graphs can be selected |
+| -g  | graph mode, Generate a menu where 11 types of graphs can be selected |
 | -a  | parse log file and produces a data report in terminal |
 | -n  | send notifications to desktop, Number argument to define behaviour |
 | -s  | CSV mode , parses log.txt and converts it to log.csv,  CSV file |
+| -ST | Stress test CPU and measures temperature output to graph and csv file , optional number of test runs as a argument eg (-ST 5)|
 
 Files and setup
 -----------------------------------------
@@ -87,8 +87,8 @@ Config file: The user **MUST** create a config file at path in table above.
 The config file is NOT installed by setup. A dummy config file is available in documentation folder at repositry
 , used  for -m mail option, GPIO/LED feature and the alarm function. 
 
-The sstmp setting in config file is created so the ssmtp config file can be kept 
-secured from all but root account. 
+The sSMTP setting in config file is created so the ssmtp config file can be kept 
+secured from all but root account. Note: this program uses sSMTP not python module smtplib  
 
 The setting "RPI_AuthUser" the is email address 
 destination of data from -m option. 
@@ -142,67 +142,60 @@ $HOME/.cache/rpi_tempmon/
 Dependencies
 -----------
 
-Note:
-Numbers 2 and 4 should already installed by setup.py when you install rpitempmon,
-You should not have to install them.
-Numbers 1 and 3 are optional dependencies, 
-They will have to manually installed from linux repos 
-you only need them for mailing and desktop notifications respectively. 
+1. simple SMTP - Version: 2.64-8 - Program which delivers email from a computer to a mailhost
 
-1. sSMTP - Version: 2.64-8 - Simple SMTP
-
-sSMTP is a simple MTA to deliver mail from a computer to a mail hub (SMTP server)
-needed for -m mail option. 
+Optional, sSMTP is a simple Mail transfer agent to deliver mail from a computer to a mail hub 
+(SMTP server), needed only for -m mail option. 
 
 ```sh
 $ sudo apt install ssmtp
 ```
 
 * Config:
-To configure SSMTP, you will have to edit its configuration file 
+sSMTP is used rather than than python inbuilt smtplib module 
+as this program was originally a bash program and this a legacy of that,
+also allows access to sSMTP config file for greater portability 
+and security. 
+To configure sSMTP, you will have to edit its configuration file 
 (/etc/ssmtp/ssmtp.conf) and enter your account settings. see below link
 https://wiki.archlinux.org/index.php/SSMTP
 An example sstmp config file for gmail is in documentation folder.
-and configure the rpi_tempmon.cfg as well, see files section.
+and configure the setting in rpi_tempmon.cfg as well, see files section.
 
+2. sysbench - Version 0.4.12-1.1 - benchmarking tool.
 
-2. matplotlib - Version: 2.2.2 - Python plotting package 
-
-The graph modules requires python module *matplotlib* to draw graphs,
-This is for -g and -G options.
+Optional, only used by stress test option -ST.
 
 ```sh
-$ sudo pip3 install matplotlib
+$ sudo apt install sysbench.
 ```
 
 3. libnotify-bin - Version 0.7.6-2 - sends desktop notifications to a notification daemon 
-
 
 ```sh
 $ sudo apt install libnotify-bin
 ```
 
-This is needed if using the -n option which uses the notify-send command. 
+Optional, This is only needed if using the -n option which uses the notify-send command. 
 Additional packages or steps 
 **may** be required to get notify-send working,
 depending on system. for example  
 [Jessie](https://raspberrypi.stackexchange.com/questions/75299/how-to-get-notify-send-working-on-raspbian-jessie)
 
+4. matplotlib - Version: 2.2.2 - Python plotting package 
 
-4. psutil  - Version (2.1.1) -  Library for retrieving info on PC
+The graph modules requires python module *matplotlib* to draw graphs,
+This is for -g and -ST options.
+Installed by setup.py during installation.
 
-```sh
-$ sudo pip3 install psutil
+5. psutil  - Version (2.1.1) -  Library for retrieving info on PC
 
-# or
+Used to retrieve some CPU and memory information.
+Installed by setup.py during installation.
 
-$ sudo apt install python3-psutil
-```
 
 Features
 ----------------------
-
-
 
 For a raspberry pi the official operating temperature limit is 85°C, 
 and as a result the Raspberry Pi should start to thermally throttle 
@@ -213,7 +206,7 @@ The program calculates the ARM CPU and GPU temperature of
 a Raspberry Pi and outputs them in Centigrade together with
 datetime stamp. Also shows CPU , RAM memory usage .
 
-The program has nine features
+The program has ten features
 1. Normal mode - output to screen with optional GPIO output, prompt for update.
 2. Continuous mode - output to screen with optional GPIO output, updates based on timer.
 3. Logfile mode   - output to single logfile(also mail mode if mail alert mode on and triggered).
@@ -223,6 +216,7 @@ The program has nine features
 7. CSV mode - parses log.txt and converts it to log.csv for external use
 8. Data mode - parses log file and produces a small report.
 9. Notify mode - send notifications to desktop, Number argument to define behaviour 
+10. Stress test mode - Stresses the CPU with math and records results in csv file and graph.
 
 **1. normal mode**
 
@@ -253,13 +247,14 @@ but with warning in title.
  Sample output of logfile:
  
 ```sh
-TS = 18-04-04 09:46:51
-GPU temperature = 60.7'C
-CPU temperature = 61.5'C
-Cpu usage = 25.8
-RAM usage = 33.9
-Swap usage = 11.6
-Raspberry pi temperature monitor: raspberrypi 
+TS = 18-04-22 14:19:42
+EP = 1524403183.0
+GPU temperature = 48.3'C
+CPU temperature = 48.3
+Cpu usage = 40.4
+RAM usage = 45.0
+Swap usage = 98.6
+Raspberry pi temperature monitor: raspberrypi
 ```
 
 The log file is appended with "Warning:" text message if alarm state entered.
@@ -292,32 +287,29 @@ config file which should be set up just for root account.
 In graph mode, the program using matplotlib (plotting library) 
 creates a plot of various data versus time.
 Note: Will not work with log files containing data older than version 2.0.
-The logfile.txt created by logfile mode 3 is used for data for graph 1-4.
-The graphs 5-6 are live plots sampled every two seconds for 150 points,
+The logfile.txt created by logfile mode 3 is used for data for graph 1-8.
+graphs 1-4 use time-date stamp as yaxis value
+graphs 5-8 use Unix Epoch stamp as yaxis value, this is better for irregular data
+points across multiple dates.
+The graphs 9-11 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
 
-1.  CPU and GPU Temperature versus Time-date
-2.  CPU Temperature and CPU usage versus Time-date
-3.  RAM and Swap memory usage versus Time-date
-4.  CPU usage versus Time-date
-5.  CPU usage versus live Time
-6.  GPU Temperature versus live Time
- 
-Two sample graphs of six , screenshots of all six are in screenshot folder.
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphoptionsmenu.jpg.jpg)  
 
-![graph mode 2](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode2.jpg)
+Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
 
-![graph mode 5](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode5.jpg)
+![graph mode 6](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode2.jpg)
 
-**7. csv convert**
+
+**7. CSV(comma-separated values)  convert**
 
 New in Version 2.0. Run with -s on the CLI.
 Parses log.txt and creates log.csv. 
 Note: Will not work with log files containing data older than version 2.0.
 This csv file can be then used by user in another app.
 A comma-separated values (CSV) file is a delimited text file 
-that uses a comma to separate values. This file can then be loaded by libreoffice calc
-for example.
+that uses a comma to separate values. This file can then be loaded into libreoffice calc.
+for further processing, for example.
 
 sample output = time-data, CPU temp, GPU temp, CPU usage , RAM usage , swap usage 
 
@@ -338,14 +330,39 @@ Send notifications to desktop, Numbered argument to define behaviour
 
 ![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/nyalarm.jpg)
 
+
+**10. Stress test mode**
+
+This mode uses the sysbench benchmarking tool.
+The test request consists in calculation of prime numbers up to a value of 20000. 
+All calculations are performed using 64-bit integers. 4 worker threads are created.
+The number of test runs is passed on command line as integer max 50 min 2.
+CPU temperature and freq are recorded for eahc test run and are outputed to a csv file,
+called stresslog.csv .
+
+```sh
+1,56.9,27.1
+2,61.3,99.7
+```
+
+At the end of test, there is an option to display results in a graph.
+
+![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphstresstest.jpg)
+
 See Also
 -----------
 README.md is at repository.
 Screenshots and dummy config files are also available.
 
-[SSMTP help](https://wiki.archlinux.org/index.php/SSMTP)
+[sSMTP help](https://wiki.archlinux.org/index.php/SSMTP)
+
+[libnotify](http://manpages.ubuntu.com/manpages/artful/man1/notify-send.1.html)
+
+[sysbench](https://manpages.debian.org/testing/sysbench/sysbench.1.en.html)
 
 [matplotlib help](https://matplotlib.org/)
+
+[psutil](https://psutil.readthedocs.io/en/latest/)
 
 Communication
 -----------

@@ -26,3 +26,11 @@ Version control history:
 	* csv option added -s which converts log file to csv for third party use.
 	* Added CPU,Ram and swap memory usage data 
 	* mail data now sent as attachment
+
+* Version 2.1-2 210418
+	* Epoch unix time added as an alternative to time-date stamp.
+    * Graph modes increased from 6 to 12
+    * Stress test added with csv file and graph output.
+	* Note: old logs files from version 1.x will no longer work with Version 2
+	start again with fresh data. 
+	 
