@@ -269,7 +269,7 @@ For example this crontab entry will run logfile mode once an hour,
 Note: The path to executable may differ on each users system.
 
 ```sh
-0 * * * *  /usr/local/bin/rpi_tempmon.py -l
+0 * * * *  /usr/local/bin/rpi_tempmon.py -l >/dev/null 2>&1
 ```
 
 **5. Mail mode**
