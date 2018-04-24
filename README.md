@@ -337,7 +337,7 @@ This mode uses the sysbench benchmarking tool.
 The test request consists in calculation of prime numbers up to a value of 20000. 
 All calculations are performed using 64-bit integers. 4 worker threads are created.
 The number of test runs is passed on command line as integer max 50 min 2.
-CPU temperature and freq are recorded for eahc test run and are outputed to a csv file,
+CPU temperature and freq are recorded for each test run and are outputed to a csv file,
 called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
 
 ```sh
@@ -349,6 +349,7 @@ At the end of test, there is an option to display results in a graph.
 
 ![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphstresstest.jpg)
 
+Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](stresstestdata/stresstest.md) 
 See Also
 -----------
 README.md is at repository.
