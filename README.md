@@ -38,13 +38,7 @@ Make sure that python3 and pip3 have been installed on your machine, then:
 sudo pip3 install rpi_tempmon.py
 ```
 
-If you are an Arch linux OS user 
-rpi_tempmon can be installed by PKGBUILD. 
-The PKGBUILD file is available in the AUR - Arch user repository. 
 
-    AUR package name :rpi_tempmon
-    AUR maintainer : glyons
-    AUR location: https://aur.archlinux.org/packages/rpi_tempmon/
 
 Usage
 -------------------------------------------
