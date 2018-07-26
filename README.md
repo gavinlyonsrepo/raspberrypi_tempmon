@@ -48,7 +48,7 @@ Run in a terminal by typing rpi_tempmon.py or python3 rpi_tempmon.py:
 
 rpi_tempmon.py -[options][arguments]
 
-Options list (standalone cannot be combined):
+Options list *(Note: Options are standalone, not designed to be combined)*:
 
 | Option          | Description     |
 | --------------- | --------------- |
