@@ -31,8 +31,15 @@ Table of contents
 Installation
 -----------------------------------------------
 
-For Linux OS users.
-Make sure that python3 and pip3 have been installed on your machine, then: 
+For Linux OS users. raspberrypi_tempmon is a python 3 program
+Make sure that:
+
+* python3 
+* pip3 
+
+Have been installed on your machine, 
+
+Then Install with: 
 
 ```sh
 sudo pip3 install rpi_tempmon.py
@@ -186,6 +193,10 @@ Installed by setup.py during installation.
 
 Used to retrieve some CPU and memory information.
 Installed by setup.py during installation.
+
+6. RPi.GPIO - version0.6.4) - This package controls the GPIO on a Raspberry Pi.
+
+Should be installed by default on most OS, like Raspibian.
 
 
 Features
@@ -360,6 +371,8 @@ Screenshots and dummy config files are also available.
 [matplotlib help](https://matplotlib.org/)
 
 [psutil](https://psutil.readthedocs.io/en/latest/)
+
+[rpi.gpio](https://pypi.org/project/RPi.GPIO/)
 
 Communication
 -----------
