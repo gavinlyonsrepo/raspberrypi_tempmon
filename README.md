@@ -277,9 +277,9 @@ In order to get mail mode working you must complete 3-4 steps.
 This file allows for user to set an email address without access to msmtp
 config file which should be set up just for root account.
 2. Install msmtp and dependencies as per installation section
-3. Configure [msmtp configuration file]([MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)) 
+3. Configure msmtp configuration file [MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
 A working example msmtprc config file for gmail is in documentation folder, see link for details.
-4. Optional, It also possible you may need to configure your email account to accept msmtp mails 
+4. Optional, It is also possible you may need to configure your email account to accept msmtp mails 
 this was the case for gmail and ssmtp. See here [Login credentials not working with Gmail SMTP](https://stackoverflow.com/questions/16512592/login-credentials-not-working-with-gmail-smtp#27515883)
 
 **6. graph mode**
