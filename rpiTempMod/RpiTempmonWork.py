@@ -11,7 +11,7 @@ Functions in this module
 (7) get_swap_info: Return swap memory  usage using psutil
 (8) led_toggle_func: functionto toggle a GPIO
 (9) logging_func: sents log data to file
-(10) mail_func: Sends mail via ssmpt
+(10) mail_func: Sends mail via msmpt
 (11) data_func: Function to parse log file also produce a Data report
 (12) stress_func: Carry out stress test
 (13) msg_func: Writes to console
@@ -68,6 +68,8 @@ def csv_convert(destlog):
         msg_func("red", "Problem with csv convert function {}".format(error))
         msg_func("red", "Check that log file exists, is not corrupt")
         msg_func("red", "or created by a version pre-2.0-1 - {}".format(mylogpath))
+    else:
+        msg_func("bold", "Log File conversion from text to csv completed")
 
 
 def notify_func(cli_arg_2, cpu_limit):
@@ -190,8 +192,9 @@ def mail_func(sub, mailu, destlog):
     try:
         os.chdir(destlog)
         if os.path.exists("log.txt"):
-            # Command to send mail by ssmpt from bash
-            os.system('echo "Datafile log.txt attached" | mail -s "raspberry-PI-temperature {}  " -a {} {}'.format(sub, "log.txt", mailu))
+            # Command to send mail from bash
+            os.system('echo "Datafile log.txt attached" > body.txt') 
+            os.system('mpack -s "raspberry-PI-temperature {}" -d body.txt log.txt {}'.format(sub, mailu))
         else:
             msg_func("red", "Error: log file is not there {}".format(destlog))
     except Exception as error:
@@ -199,6 +202,8 @@ def mail_func(sub, mailu, destlog):
         msg_func("red", "Check that log file exists {}".format(destlog))
         msg_func("red", "Check that network is up")
         msg_func("red", "ssmtp and the user is configured properly {}".format(mailu))
+    else:
+        msg_func("bold", "Mail send function completed")
 
 
 def data_func(destlog, flag):

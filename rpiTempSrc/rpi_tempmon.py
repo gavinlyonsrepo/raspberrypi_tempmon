@@ -29,13 +29,12 @@ import time
 import socket  # For hostname
 
 # my modules
-from rpiTempMod import RpiTempmonWork as Work
 from rpiTempMod import RpiTempmonGraph
-
+from rpiTempMod import RpiTempmonWork as Work
 
 # =======================GLOBALS=========================
 # metadata
-__VERSION__ = "2.1"
+__VERSION__ = "2.2"
 __URL__ = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
 
 # set the path for logfile

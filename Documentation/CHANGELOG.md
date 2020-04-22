@@ -31,6 +31,13 @@ Version control history:
 	* Epoch unix time added as an alternative to time-date stamp.
 	* Graph modes increased from 6 to 12
 	* Stress test added with csv file and graph output.
-	* Note: old logs files from version 1.x will no longer work with Version 2
+	* Note: old logs files from version 1.x.x will no longer work with Version 2
 	start again with fresh data.
 
+* version 2.2-3 210420
+	* For mail mode, replaced ssmpt with msmtp in mail function.
+	* ssmtp had to be replaced as apparently ssmtp is deprecated in RPi [Buster](https://raspberrypi.stackexchange.com/questions/99968/cannot-send-mail-from-buster), 
+	* and is considered obsolete, users where reporting issues via mail.
+	* Users using mail mode option will have to install and configure msmtp.
+	* Details in Readme. 
+	

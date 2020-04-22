@@ -1,0 +1,23 @@
+# Set default values for all following accounts.
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+# Gmail
+account        gmail
+host           smtp.gmail.com
+port           587
+from           yourmailname@gmail.com
+user           yourusername
+password       yourpassword
+
+# A freemail service
+account        freemail
+host           smtp.freemail.example
+from           joe_smith@freemail.example
+
+
+# Set a default account
+account default : gmail

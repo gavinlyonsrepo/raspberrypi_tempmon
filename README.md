@@ -3,14 +3,17 @@ Overview
 * Name: rpi_tempmon 
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 
 * Description: This python program will display the ARM CPU and 
-GPU temperature of a Raspberry Pi 2/3 
+GPU temperature of a Raspberry Pi  
 features include command line display, GPIO (LED) output, logging, alarm limit, 
-graphing,  desktop notification, stress tests and e-mailing options. 
+graphing, desktop notification, stress tests and e-mailing options. 
 The program is written in python 3. It is run in terminal and uses matplotlib 
 plots for graph modes. This software was built and tested on a raspberry pi 3 model B, 
 running Linux, Raspbian 8.0 jessie, LXDE lxpanel 0.7.2, Python 3.4.2.
 * Author: Gavin Lyons
 * URL: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
+* Communication: Upstream repo at URL github site above or glyons66@hotmail.com
+* History: [Changelog is at repository in documentation section](Documentation/CHANGELOG.md)
+* Copyright: Copyright (C) 2017 - Gavin Lyons - GPLv3 [License is at repository in documentation section](Documentation/LICENSE.txt)
 
 Table of contents
 ---------------------------
@@ -21,12 +24,8 @@ Table of contents
   * [Usage](#usage)
   * [Files and setup](#files-and-setup)
   * [Output](#output)
-  * [Optional dependencies](#optional-dependencies)
+  * [Dependencies](#Dependencies)
   * [Features](#features)
-  * [See Also](#see-also)
-  * [Communication](#communication)
-  * [History](#history)
-  * [Copyright](#copyright)
 
 Installation
 -----------------------------------------------
@@ -44,7 +43,6 @@ Then Install with:
 ```sh
 sudo pip3 install rpi_tempmon.py
 ```
-
 
 
 Usage
@@ -88,9 +86,6 @@ Config file: The user **MUST** create a config file at path in table above.
 The config file is NOT installed by setup. A dummy config file is available in documentation folder at repositry
 , used  for -m mail option, GPIO/LED feature and the alarm function. 
 
-The sSMTP setting in config file is created so the ssmtp config file can be kept 
-secured from all but root account. Note: this program uses sSMTP not python module smtplib  
-
 The setting "RPI_AuthUser" the is email address 
 destination of data from -m option. 
  
@@ -106,11 +101,8 @@ an GPIO pin will swicth on during an alarm state in continuous and normal mode.
 The RPI GPIO pin as defined by GPIO_LED number. You can connect an LED or another
 electronic component to this pin.
 
-NOTE: An example config file is available in documentation folder of 
-this repo.
-
 Make sure to include the [MAIN] header and all settings just as below or 
-copy from example file.
+copy from the example file.
 
 Settings:
 
@@ -129,7 +121,7 @@ Settings:
 >GPIO_LED = 26
 >
 
-
+Screenshots, example config/log files are also available in documentation.
 
 Output
 -------------------------------------
@@ -143,59 +135,49 @@ $HOME/.cache/rpi_tempmon/
 Dependencies
 -----------
 
-1. simple SMTP - Version: 2.64-8 - Program which delivers email from a computer to a mailhost
-
-Optional, sSMTP is a simple Mail transfer agent to deliver mail from a computer to a mail hub 
+1. simple MSMTP - Version: 1.6.6-1- Program which delivers email from a computer to a mailhost.
+[MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
+Optional, only used by mail functions.
+light SMTP client with support for server profiles
+client that can be used to send mails .
 (SMTP server), needed only for -m mail option. 
+Also needs to install another few small dependencies (mpack etc) in order to send attachment.
+See mail mode in features for setup.
 
 ```sh
-$ sudo apt install ssmtp
+$ sudo apt install msmtp msmtp-mta mailutils mpack
+
 ```
 
-* Config:
-sSMTP is used rather than than python inbuilt smtplib module 
-as this program was originally a bash program and this a legacy of that,
-also allows access to sSMTP config file for greater portability 
-and security. 
-To configure sSMTP, you will have to edit its configuration file 
-(/etc/ssmtp/ssmtp.conf) and enter your account settings. see below link
-https://wiki.archlinux.org/index.php/SSMTP
-An example sstmp config file for gmail is in documentation folder.
-and configure the setting in rpi_tempmon.cfg as well, see files section.
-
 2. sysbench - Version 0.4.12-1.1 - benchmarking tool.
-
+[sysbench](https://manpages.debian.org/testing/sysbench/sysbench.1.en.html)
 Optional, only used by stress test option -ST.
 
 ```sh
 $ sudo apt install sysbench.
 ```
 
-3. libnotify-bin - Version 0.7.6-2 - sends desktop notifications to a notification daemon 
+3. libnotify-bin - Version 0.7.6-2 - sends desktop notifications to a notification daemon. 
+[libnotify](http://manpages.ubuntu.com/manpages/artful/man1/notify-send.1.html)
+Optional, This is only needed if using the -n option which uses the notify-send command. 
 
 ```sh
 $ sudo apt install libnotify-bin
 ```
 
-Optional, This is only needed if using the -n option which uses the notify-send command. 
-Additional packages or steps 
-**may** be required to get notify-send working,
-depending on system. for example  
-[Jessie](https://raspberrypi.stackexchange.com/questions/75299/how-to-get-notify-send-working-on-raspbian-jessie)
-
-4. matplotlib - Version: 2.2.2 - Python plotting package 
-
+4. matplotlib - Version: 2.2.2 - Python plotting package. 
+[matplotlib help](https://matplotlib.org/)
 The graph modules requires python module *matplotlib* to draw graphs,
 This is for -g and -ST options.
-Installed by setup.py during installation.
+Should be Installed by rpi_tempmon setup.py during installation.
 
-5. psutil  - Version (2.1.1) -  Library for retrieving info on PC
-
+5. psutil  - Version (2.1.1) -  Library for retrieving info on PC.
+[psutil](https://psutil.readthedocs.io/en/latest/)
 Used to retrieve some CPU and memory information.
 Installed by setup.py during installation.
 
 6. RPi.GPIO - version0.6.4) - This package controls the GPIO on a Raspberry Pi.
-
+[rpi.gpio](https://pypi.org/project/RPi.GPIO/)
 Should be installed by default on most OS, like Raspibian.
 
 
@@ -209,7 +191,7 @@ to within a degree usually.
 
 The program calculates the ARM CPU and GPU temperature of 
 a Raspberry Pi and outputs them in Centigrade together with
-datetime stamp. Also shows CPU , RAM memory usage .
+datetime stamp. Also shows CPU, RAM memory usage .
 
 The program has ten features
 1. Normal mode - output to screen with optional GPIO output, prompt for update.
@@ -279,19 +261,31 @@ Note: The path to executable may differ on each users system.
 
 **5. Mail mode**
 
-In mail mode an email is sent using ssmtp. 
-The mail contains the data from logfile mode only it will not work with 
+In mail mode an email is sent using msmtp. 
+The mail contains the data from logfile mode only, it will NOT work with 
 sub-folders from logfolder mode.
-The user must install and configure the ssmtp program(see installation section)
-Also the rpi_tempmon.cfg file mentioned above must be configured. 
-This file allows for user to set an email without access to ssmtp
+
+msmtp is used rather than than python inbuilt smtplib module 
+as this program was originally a bash program and this a legacy of that,
+also allows access to msmtp config file for greater portability 
+and security. The program originally used ssmtp but this is now obsolete 
+in latest raspbian software. 
+
+In order to get mail mode working you must complete 3-4 steps.
+
+1. Set settings in rpi_tempmon config file, see Files and setup section.
+This file allows for user to set an email address without access to msmtp
 config file which should be set up just for root account.
+2. Install msmtp and dependencies as per installation section
+3. Configure [msmtp configuration file]([MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)) 
+A working example msmtprc config file for gmail is in documentation folder, see link for details.
+4. Optional, It also possible you may need to configure your email account to accept msmtp mails 
+this was the case for gmail and ssmtp. See here [Login credentials not working with Gmail SMTP](https://stackoverflow.com/questions/16512592/login-credentials-not-working-with-gmail-smtp#27515883)
 
 **6. graph mode**
 
 In graph mode, the program using matplotlib (plotting library) 
 creates a plot of various data versus time.
-Note: Will not work with log files containing data older than version 2.0.
 The logfile.txt created by logfile mode 3 is used for data for graph 1-8.
 graphs 1-4 use time-date stamp as yaxis value
 graphs 5-8 use Unix Epoch stamp as yaxis value, this is better for irregular data
@@ -310,7 +304,6 @@ Sample graph screenshot, screenshots of all others are in [screenshot folder of 
 
 New in Version 2.0. Run with -s on the CLI.
 Parses log.txt and creates log.csv. 
-Note: Will not work with log files containing data older than version 2.0.
 This csv file can be then used by user in another app.
 A comma-separated values (CSV) file is a delimited text file 
 that uses a comma to separate values. This file can then be loaded into libreoffice calc.
@@ -329,6 +322,11 @@ Parses log file created by logfile mode 3 and produces a data report on console.
 **9. notify mode**
 
 Send notifications to desktop, Numbered argument to define behaviour 
+After installing notify-send, Additional packages or steps 
+**may** be required to get notify-send working,
+depending on system. for example  
+[Jessie](https://raspberrypi.stackexchange.com/questions/75299/how-to-get-notify-send-working-on-raspbian-jessie)
+
 
 * -n 2 = argument 2 = If run always display CPU temperature , no warning.
 * -n 3 = argument 3 = If run only display if CPU temperature exceeds limit
@@ -355,43 +353,3 @@ At the end of test, there is an option to display results in a graph.
 ![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphstresstest.jpg)
 
 Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](stresstestdata/stresstest.md) 
-
-
-See Also
------------
-README.md is at repository.
-Screenshots and dummy config files are also available.
-
-[sSMTP help](https://wiki.archlinux.org/index.php/SSMTP)
-
-[libnotify](http://manpages.ubuntu.com/manpages/artful/man1/notify-send.1.html)
-
-[sysbench](https://manpages.debian.org/testing/sysbench/sysbench.1.en.html)
-
-[matplotlib help](https://matplotlib.org/)
-
-[psutil](https://psutil.readthedocs.io/en/latest/)
-
-[rpi.gpio](https://pypi.org/project/RPi.GPIO/)
-
-Communication
------------
-If you should find a bug or you have any other query, 
-please send a report.
-Pull requests, suggestions for improvements
-and new features welcome.
-* Contact: Upstream repo at github site below or glyons66@hotmail.com
-* [Upstream repository](https://github.com/gavinlyonsrepo/raspberrypi_tempmon)
-
-History
-------------------
-
-[Changelog is at repository in documentation section](Documentation/CHANGELOG.md)
-
-Copyright
--------------
-Copyright (C) 2017 - Gavin Lyons - GPLv3
-
-[License is at repository in documentation section](Documentation/LICENSE.txt)
-
-
