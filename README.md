@@ -11,7 +11,6 @@ plots for graph modes. This software was built and tested on a raspberry pi 3 mo
 running Linux, Raspbian 8.0 jessie, LXDE lxpanel 0.7.2, Python 3.4.2.
 * Author: Gavin Lyons
 * URL: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
-* Communication: Upstream repo at URL github site above or glyons66@hotmail.com
 * History: [Changelog is at repository in documentation section](Documentation/CHANGELOG.md)
 * Copyright: Copyright (C) 2017 - Gavin Lyons - GPLv3 [License is at repository in documentation section](Documentation/LICENSE.txt)
 
@@ -169,7 +168,7 @@ $ sudo apt install libnotify-bin
 [matplotlib help](https://matplotlib.org/)
 The graph modules requires python module *matplotlib* to draw graphs,
 This is for -g and -ST options.
-Should be Installed by rpi_tempmon setup.py during installation.
+Installed by rpi_tempmon setup.py during installation in theory, if this fails install with pip.
 
 5. psutil  - Version (2.1.1) -  Library for retrieving info on PC.
 [psutil](https://psutil.readthedocs.io/en/latest/)
