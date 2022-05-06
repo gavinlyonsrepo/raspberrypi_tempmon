@@ -289,7 +289,7 @@ points across multiple dates.
 The graphs 9-12 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
 
-![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmenu.jpg)  
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmenu.png)  
 
 Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
 
