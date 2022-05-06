@@ -1,3 +1,5 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/whitelight976)
+
 Overview
 --------------------------------------------
 * Name: rpi_tempmon 
@@ -214,7 +216,7 @@ Data is sent to terminal screen.
 The GPIO pin in config file will be turned on 
 and Data in red is displayed in screen for an Alarm state, if  setup in config file. 
  
-![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen.jpg)
+![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen1.jpg)
  
 **3. & 4. Log  modes**
 
@@ -287,12 +289,13 @@ points across multiple dates.
 The graphs 9-12 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
 
-![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphoptionsmenu.jpg)  
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmenu.jpg)  
 
 Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
 
 ![graph mode 6](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmode2.jpg)
 
+![graph mode 12](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmode12.jpg)
 
 **7. CSV(comma-separated values)  convert**
 
@@ -343,7 +346,4 @@ called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
 ```
 
 At the end of test, there is an option to display results in a graph.
-
-![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphstresstest.jpg)
-
 Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](Documentation/stresstestdata/stresstest.md) 

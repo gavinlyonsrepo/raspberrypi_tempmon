@@ -41,6 +41,6 @@ Version control history:
 	* Users using mail mode option will have to install and configure msmtp.
 	* Details in Readme. 
 	
-* version 2.3-4 05-05-202		
+* version 2.3-4 05-05-2022
 	* added new graph mode option 12 GPU & CPU% & RAM% versus live time
 	* Automated creation of config file if missing (on start up new user)
