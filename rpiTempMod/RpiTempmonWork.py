@@ -107,7 +107,7 @@ def get_cpu_tempfunc():
 def get_gpu_tempfunc():
     """ Return GPU temperature as a character string"""
     res = os.popen('/opt/vc/bin/vcgencmd measure_temp').readline()
-    return res.replace("temp=", "")
+    return (res.replace("\n", "").replace("temp=", ""))
 
 
 def get_cpu_use():
@@ -165,7 +165,7 @@ def logging_func(choice, mail_alert, cpu_limit, mailuser, destlog, alarm_mode):
         with open("log.txt", "a+") as mylogfile:
             mylogfile.write("TS = " + str(today) + '\n')
             mylogfile.write("EP = " + str(round(time.time(), 0)) + '\n')
-            mylogfile.write("GPU temperature = " + get_gpu_tempfunc())
+            mylogfile.write("GPU temperature = " + get_gpu_tempfunc() + '\n')
             mylogfile.write("CPU temperature = " + get_cpu_tempfunc() + '\n')
             mylogfile.write("Cpu usage = " + get_cpu_use() + '\n')
             mylogfile.write("RAM usage = " + get_ram_info() + '\n')
@@ -193,7 +193,7 @@ def mail_func(sub, mailu, destlog):
         os.chdir(destlog)
         if os.path.exists("log.txt"):
             # Command to send mail from bash
-            os.system('echo "Datafile log.txt attached" > body.txt') 
+            os.system('echo "Datafile log.txt attached" > body.txt')
             os.system('mpack -s "raspberry-PI-temperature {}" -d body.txt log.txt {}'.format(sub, mailu))
         else:
             msg_func("red", "Error: log file is not there {}".format(destlog))
@@ -337,7 +337,7 @@ def msg_func(myprocess, mytext):
     OUTPUT yesno prompt return 1 or 0"""
 
     # colours for printf
-    blue = '\033[94m'
+    blue = '\033[96m'
     green = '\033[92m'
     yellow = '\033[93m'
     red = '\033[91m'
@@ -385,7 +385,6 @@ def importtest(text):
     """import print test statement"""
     # print(text)
     pass
-    
 # ===================== MAIN ===============================
 
 

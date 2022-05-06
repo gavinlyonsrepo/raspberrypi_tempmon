@@ -2,17 +2,19 @@ Overview
 --------------------------------------------
 * Name: rpi_tempmon 
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 
-* Description: This python program will display the ARM CPU and 
+* Description: 
+
+This python program will display the ARM CPU and 
 GPU temperature of a Raspberry Pi  
 features include command line display, GPIO (LED) output, logging, alarm limit, 
 graphing, desktop notification, stress tests and e-mailing options. 
-The program is written in python 3. It is run in terminal and uses matplotlib 
-plots for graph modes. This software was built and tested on a raspberry pi 3 model B, 
-running Linux, Raspbian 8.0 jessie, LXDE lxpanel 0.7.2, Python 3.4.2.
+It is run in terminal and uses matplotlib 
+plots for graph modes.
+
 * Author: Gavin Lyons
 * URL: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
-* History: [Changelog is at repository in documentation section](Documentation/CHANGELOG.md)
-* Copyright: Copyright (C) 2017 - Gavin Lyons - GPLv3 [License is at repository in documentation section](Documentation/LICENSE.txt)
+* Toolchain: RPI 3 model B, Raspbian 10 Buster, LXDE lxpanel 0.10.0, 
+Python 3.7.3.
 
 Table of contents
 ---------------------------
@@ -30,25 +32,17 @@ Installation
 -----------------------------------------------
 
 For Linux OS users. raspberrypi_tempmon is a python 3 program
-Make sure that:
-
-* python3 
-* pip3 
-
-Have been installed on your machine, 
-
-Then Install with: 
+Make sure that: python3 & pip3 Have been installed on your machine, 
+Then Install form PyPi with: 
 
 ```sh
 sudo pip3 install rpi_tempmon.py
 ```
 
-
 Usage
 -------------------------------------------
-Program is a python 3 package. 
-
-Run in a terminal by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
+Program is a python 3 package. Run in a terminal 
+by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
 
 rpi_tempmon.py -[options][arguments]
 
@@ -62,7 +56,7 @@ Options list *(Note: Options are standalone, not designed to be combined)*:
 | -l  | Creates and/or appends to log file at output folder |
 | -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
 | -m  | Sends the log file to an email account |
-| -g  | graph mode, Generate a menu where 11 types of graphs can be selected |
+| -g  | graph mode, Generate a menu where 12 types of graphs can be selected |
 | -a  | parse log file and produces a data report in terminal |
 | -n  | send notifications to desktop, Number argument to define behaviour |
 | -s  | CSV mode , parses log.txt and converts it to log.csv,  CSV file |
@@ -77,12 +71,12 @@ rpi_tempmon files needed are listed below:
 | rpi_tempmon.py | The main python script |
 | RpiTempmonWork.py| python module containing various utility functions used by main |
 | RpiTempmonGraph.py | python module dealing with graph output by matplotlib |
-| $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file, user made, NOT installed |
+| $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file |
 | README.md | help file |
 
 
-Config file: The user **MUST** create a config file at path in table above.
-The config file is NOT installed by setup. A dummy config file is available in documentation folder at repositry
+Config file: The config file with dummy values is created if missing.
+A dummy config file is available in documentation folder at repository
 , used  for -m mail option, GPIO/LED feature and the alarm function. 
 
 The setting "RPI_AuthUser" the is email address 
@@ -220,7 +214,7 @@ Data is sent to terminal screen.
 The GPIO pin in config file will be turned on 
 and Data in red is displayed in screen for an Alarm state, if  setup in config file. 
  
-![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/main_screen.jpg)
+![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen.jpg)
  
 **3. & 4. Log  modes**
 
@@ -277,9 +271,10 @@ This file allows for user to set an email address without access to msmtp
 config file which should be set up just for root account.
 2. Install msmtp and dependencies as per installation section
 3. Configure msmtp configuration file [MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
-A working example msmtprc config file for gmail is in documentation folder, see link for details.
+A working example msmtprc config file for gmail is in documentation folder, "example_msmtprc".
 4. Optional, It is also possible you may need to configure your email account to accept msmtp mails 
 this was the case for gmail and ssmtp. See here [Login credentials not working with Gmail SMTP](https://stackoverflow.com/questions/16512592/login-credentials-not-working-with-gmail-smtp#27515883)
+ "Less secure app access" in google mail to On.
 
 **6. graph mode**
 
@@ -289,14 +284,14 @@ The logfile.txt created by logfile mode 3 is used for data for graph 1-8.
 graphs 1-4 use time-date stamp as yaxis value
 graphs 5-8 use Unix Epoch stamp as yaxis value, this is better for irregular data
 points across multiple dates.
-The graphs 9-11 are live plots sampled every two seconds for 150 points,
+The graphs 9-12 are live plots sampled every two seconds for 150 points,
 so five minutes of live data.
 
-![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphoptionsmenu.jpg)  
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphoptionsmenu.jpg)  
 
 Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
 
-![graph mode 6](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphmode2.jpg)
+![graph mode 6](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmode2.jpg)
 
 
 **7. CSV(comma-separated values)  convert**
@@ -330,7 +325,7 @@ depending on system. for example
 * -n 2 = argument 2 = If run always display CPU temperature , no warning.
 * -n 3 = argument 3 = If run only display if CPU temperature exceeds limit
 
-![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/nyalarm.jpg)
+![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/nyalarm.jpg)
 
 
 **10. Stress test mode**
@@ -349,6 +344,6 @@ called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
 
 At the end of test, there is an option to display results in a graph.
 
-![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/screenshots/graphstresstest.jpg)
+![stress test results](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphstresstest.jpg)
 
-Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](stresstestdata/stresstest.md) 
+Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](Documentation/stresstestdata/stresstest.md) 

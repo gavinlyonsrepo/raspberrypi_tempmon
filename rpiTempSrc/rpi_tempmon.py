@@ -7,7 +7,7 @@
 # intial date       :17/08/2017
 # web url           :https://github.com/gavinlyonsrepo/raspberrypi_tempmon
 # mail              :glyons66@hotmail.com
-# python version    :3.4.2
+# python version    : 3.7.3
 # Functions:
 (1) exit_handler_func: exit handler function
 (2) stresstest_func: stresstest function
@@ -17,6 +17,7 @@
 (6) alarm_mode_check: checks for alarm condition
 (7) cont_mode_check: checks for continuous mode
 (8) main: main program loop
+(9) set_paths_func: set and check the paths for config & cache
 """
 # =========================IMPORTS======================
 # Import the system modules needed to run rpi_tempmon.py.
@@ -34,28 +35,13 @@ from rpiTempMod import RpiTempmonWork as Work
 
 # =======================GLOBALS=========================
 # metadata
-__VERSION__ = "2.2"
+__VERSION__ = "2.3"
 __URL__ = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
-
 # set the path for logfile
 DESTLOG = os.environ['HOME'] + "/.cache/rpi_tempmon"
-if not os.path.exists(DESTLOG):
-    os.makedirs(DESTLOG)
-
 # set the path for config file
 DESTCONFIG = os.environ['HOME'] + "/.config/rpi_tempmon"
-if not os.path.exists(DESTCONFIG):
-    os.makedirs(DESTCONFIG)
-DESTCONFIG = DESTCONFIG + "/" + "rpi_tempmon.cfg"
-if os.path.isfile(DESTCONFIG):
-    pass
-else:
-    print("Config file is missing at {}".format(DESTCONFIG))
-    print("User must create a config file, See url:-")
-    print("Example config file and info can be found at")
-    print(__URL__)
-    quit()
-
+DESTCONFIGFILE = DESTCONFIG + "/" + "rpi_tempmon.cfg"
 
 # ===================FUNCTION SECTION===============================
 
@@ -201,7 +187,7 @@ def read_configfile_func():
     """Read in configfile, return 6 values in a tuple"""
     try:
         myconfigfile = configparser.ConfigParser()
-        myconfigfile.read(DESTCONFIG)
+        myconfigfile.read(DESTCONFIGFILE)
         mailuser = myconfigfile.get("MAIN", "RPI_AuthUser")
         mail_alert = myconfigfile.get("MAIN", "MAIL_ALERT")
         alarm_mode = myconfigfile.get("MAIN", "ALARM_MODE")
@@ -217,7 +203,7 @@ def read_configfile_func():
         Work.msg_func("red", "  ERROR : ")
         print("Problem with config file: {}".format(error))
         print("Must have section header of [MAIN] and six parameters")
-        print("Help and exmaple file at url")
+        print("Help and example file at url")
         print(__URL__)
         exit_handler_func(0)
 
@@ -228,10 +214,10 @@ def alarm_mode_check(config_file_data_main):
     """function to check alarm mode """
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
     if alarm_mode == "1":
-        Work.msg_func("bold", "Alarm mode is on: " + cpu_limit)
+        Work.msg_func("bold", "Alarm mode is on: " + cpu_limit + "'C")
         if Work.get_cpu_tempfunc() > cpu_limit:
             # display led mode
-            Work.msg_func("red", "Warning : cpu over the temperature limit: " + cpu_limit)
+            Work.msg_func("red", "Warning : CPU over the temperature limit: " + cpu_limit + "'C")
             if led_mode == "1":
                 Work.msg_func("bold", "LED mode is on, GPIO pin selected: " + led_num)
                 Work.led_toggle_func("on", led_num)
@@ -250,9 +236,9 @@ def cont_mode_check(led_num):
                 print("Sorry, input to -c  must be a positive integer.")
                 quit()
             delay = sys.argv[2]
-            Work.msg_func("bold", "Continuous mode is on.")
-            Work.msg_func("bold", "Sleep delay set to seconds: " + str(delay))
-            Work.msg_func("bold", "Press CTRL+c to quit.")
+            Work.msg_func("bold", "Continuous mode: On")
+            Work.msg_func("bold", "Sleep delay set to: " + str(delay) + " seconds.")
+            print("\nPress CTRL+c to quit.")
             time.sleep(float(delay))
             os.system('clear')
     else:  # normal mode prompt
@@ -262,24 +248,56 @@ def cont_mode_check(led_num):
             exit_handler_func(led_num)
 
 
+def set_paths_func():
+    """set and check the paths for config file and cache/logging"""
+    if not os.path.exists(DESTLOG):  # Check cache path is there
+        os.makedirs(DESTLOG)
+    if not os.path.exists(DESTCONFIG):  # Check config path is there
+        os.makedirs(DESTCONFIG)
+
+    if os.path.isfile(DESTCONFIGFILE):  # Check config file is there
+        pass
+    else:
+        try:
+            config = configparser.ConfigParser()
+            config.optionxform = lambda option: option  # case sensitive option
+            config['MAIN'] = {'RPI_AuthUser': 'example@gmail.com',
+                              'MAIL_ALERT': '1',
+                              'ALARM_MODE': '1',
+                              'CPU_UPPERLIMIT': '70',
+                              'LED_MODE': '1',
+                              'GPIO_LED': '26'}
+            with open(DESTCONFIGFILE, 'w') as configfile:
+                config.write(configfile)
+        except Exception as error:
+            Work.msg_func("red", "  ERROR : ")
+            print("Config file is missing at {}".format(DESTCONFIGFILE))
+            print("Problem Creating default config file: {}".format(error))
+            print("Example config file and info can be found at:")
+            print(__URL__)
+            exit_handler_func(0)
+        else:
+            Work.msg_func("yellow", "  INFO : ")
+            print("Config file was missing at {}".format(DESTCONFIGFILE))
+            print("Config file created with default values.")
+            input("Press <Enter> to continue")
+
+
 def main(config_file_data_main):
-    """Function to hold main program loop, config file data tuple"""
+    """Function to hold main program loop, param1 : config file data tuple"""
 
     # unpack config file data main tuple
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
-
     scan_count = 0
+
     # main loop
     try:
         while True:
             print_title_func()
             scan_count += 1
             Work.msg_func("bold", "Number of scans: " + str(scan_count))
-            # check for  alarm mode
             alarm_mode_check(config_file_data_main)
-            # check for continuous mode
             cont_mode_check(led_num)
-            # call led function off
             Work.led_toggle_func("off", led_num)
     except KeyboardInterrupt:
         exit_handler_func(led_num)
@@ -289,6 +307,7 @@ def main(config_file_data_main):
 if __name__ == "__main__":
     try:
         print("\nRPi temperature monitor:")
+        set_paths_func()
         exit(main(process_cmd_arguments()))
     except (KeyboardInterrupt, SystemExit):
         pass

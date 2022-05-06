@@ -11,9 +11,9 @@ import matplotlib as mpl
 mpl.use('tkagg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
+
 # My modules
 from . import RpiTempmonWork as Work
-
 
 
 class MatplotGraph(object):
@@ -95,11 +95,12 @@ class MatplotGraph(object):
         menu.append("CPU usage versus live Time")
         menu.append("GPU Temperature versus live Time")
         menu.append("RAM usage versus live Time")
+        menu.append("CPU GPU & RAM usage versus live time")
         menu.append("Exit")
         try:
             while True:
                 print("\n")
-                Work.msg_func("blue", "Graph Menu Options")
+                Work.msg_func("blue", "RPI_tempmon :: Graph Menu Options")
                 Work.msg_func("line", "")
                 for number, string in enumerate(menu):
                     print(number+1, string)
@@ -117,6 +118,9 @@ class MatplotGraph(object):
                     self.graph_live_data("RAM")
                     break
                 elif self.selection == '12':
+                    self.graph_all_live_data()
+                    break
+                elif self.selection == '13':
                     quit()
                 else:
                     Work.msg_func("red", "\n ** Warning : Unknown Option Selected! **")
@@ -169,8 +173,72 @@ class MatplotGraph(object):
         plt.grid(True)
         plt.show()
 
+    def graph_all_live_data(self):
+        """ Draw a live graph of pi GPU/CPU/RAM """
+        print("Drawing graph of all data usage versus live time")
+        print("Press CTRL+c to quit.")
+        try:
+            time_cpu_axis = []
+            time_ram_axis = []
+            time_gpu_axis = []
+            yaxis_cpu_data = 0
+            yaxis_ram_data = 0
+            yaxis_gpu_data = 0
+            plt.ion()
+            labels = ()
+
+            # pre-load dummy data
+            for i in range(0, 150):
+                time_cpu_axis.append(.5)
+                time_ram_axis.append(.5)
+                time_gpu_axis.append(.5)
+
+            while True:
+                # get data
+                yaxis_cpu_data = Work.get_cpu_use()
+                yaxis_cpu_data = float(yaxis_cpu_data)
+                yaxis_ram_data = Work.get_ram_info()
+                yaxis_ram_data = float(yaxis_ram_data)
+                ostemp = os.popen('vcgencmd measure_temp').readline()
+                yaxis_gpu_data = (ostemp.replace("temp=", "").replace("'C\n", ""))
+                yaxis_gpu_data = float(yaxis_gpu_data)
+
+                # update the graph
+                labels = "GPU Temp + CPU & RAM usage", "CPU-% RAM-% GPU-'C", "CPU-%", "RAM-%", "GPU-'C"
+                time_cpu_axis.append(yaxis_cpu_data)
+                time_ram_axis.append(yaxis_ram_data)
+                time_gpu_axis.append(yaxis_gpu_data)
+                time_cpu_axis.pop(0)
+                time_ram_axis.pop(0)
+                time_gpu_axis.pop(0)
+                self.plot_all_now(time_cpu_axis, time_ram_axis, time_gpu_axis, labels)
+                plt.pause(2)
+
+        except Exception as error:
+            print(error)
+            Work.msg_func("bold", "Real-time matplotlib plot shutdown")
+            quit()
+
+    def plot_all_now(self, time_cpu_axis, time_ram_axis, time_gpu_axis, labels):
+        """ Called from method graph_all_live_data to draw graph"""
+
+        title, y_label, plot_cpu_label, plot_ram_label, plot_gpu_label = labels
+        plt.clf()
+
+        plt.ylim([1, 100])
+        plt.ylabel(y_label, color='red')
+
+        plt.title(self.name + title, color='green')
+        plt.grid(True)
+        plt.xlabel("Time (last 300 seconds)", color='red')
+        plt.plot(time_cpu_axis, color='blue', marker='', label=plot_cpu_label)
+        plt.plot(time_ram_axis, color='red', marker='', label=plot_ram_label)
+        plt.plot(time_gpu_axis, color='green', marker='', label=plot_gpu_label)
+        plt.legend(loc='upper right', fancybox=True, shadow=True)
+        plt.show()
+
     def graph_live_data(self, choice):
-        """ Draw a live graph of pi GPU """
+        """ Draw a live graph of pi GPU or CPU or RAM """
         try:
             time_axis = []
             yaxis_data = 0
@@ -181,9 +249,6 @@ class MatplotGraph(object):
                 time_axis.append(.5)
 
             while True:
-
-                time_axis.append(yaxis_data)
-                time_axis.pop(0)
                 if choice == "GPU":
                     ostemp = os.popen('vcgencmd measure_temp').readline()
                     yaxis_data = (ostemp.replace("temp=", "").replace("'C\n", ""))
@@ -199,7 +264,7 @@ class MatplotGraph(object):
                     time_axis.append(yaxis_data)
                     time_axis.pop(0)
                     self.plot_now(time_axis, labels)
-                else:  # RAM
+                elif choice == 'RAM':
                     yaxis_data = Work.get_ram_info()
                     yaxis_data = float(yaxis_data)
                     labels = (" RAM live usage", "Usage (%)", "RAM")
