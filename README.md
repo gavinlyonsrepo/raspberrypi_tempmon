@@ -48,7 +48,7 @@ The package is also archived on github and can be manually download and installe
 via python and setup.py
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/243.tar.gz | tar xz
+curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/2.4.tar.gz | tar xz
 cd raspberrypi_tempmon-2.4
 python3 setup.py build 
 python3 setup.py install --user
