@@ -30,7 +30,6 @@ plots for graph modes.
   * [Output](#output)
   * [Dependencies](#Dependencies)
   * [Features](#features)
-  *
 
 
 ## Installation
@@ -62,7 +61,7 @@ by typing rpi_tempmon.py or python3 rpi_tempmon.py:
 
 rpi_tempmon.py -[options][arguments]
 
-Options list *(Note: Options are standalone, not designed to be combined)*:
+Options list *(Note: Options are stand alone, not designed to be combined)*:
 
 | Option          | Description     |
 | --------------- | --------------- |
@@ -106,7 +105,7 @@ CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade, should be a positi
 If alarm mode is on when CPU temperature  goes above this limit, the alarm function will activate. 
 
 LED_MODE which should be set to one or zero(one: LED mode on, zero: off) if on 
-an GPIO pin will swicth on during an alarm state in continuous and normal mode.
+an GPIO pin will switch on during an alarm state in continuous and normal mode.
 The RPI GPIO pin as defined by GPIO_LED number. You can connect an LED or another
 electronic component to this pin.
 
@@ -133,7 +132,6 @@ Settings:
 Screenshots, example config/log files are also available in documentation.
 
 ## Output
-
 
 The output folder for log files is currently fixed at: 
 
@@ -192,7 +190,6 @@ Should be installed by default on most OS, like Raspibian.
 
 ## Features
 
-
 For a raspberry pi the official operating temperature limit is 85°C, 
 and as a result the Raspberry Pi should start to thermally throttle 
 performance around 82°C. The GPU and CPU are closely correlated
@@ -233,7 +230,6 @@ and Data in red is displayed in screen for an Alarm state, if  setup in config f
 ![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen1.jpg)
  
 **3. & 4. Log  modes**
-
 
 In logfile mode the data is appended into a file log.txt at output folder. 
 With optional mail setup if alarm mode setup. For mode 3 an email
