@@ -11,12 +11,12 @@ setup(
     url="https://github.com/gavinlyonsrepo/raspeberrypi_tempmon",
     download_url='https://github.com/gavinlyonsrepo/raspeberrypi_tempmon/archive/2.3.tar.gz',
     packages=['rpiTempSrc','rpiTempMod',],
-    install_requires= ['matplotlib','pip','psutil'],
+    install_requires= ['matplotlib','pip','psutil','RPi.GPIO'],
     setup_requires = ['pip'],
     scripts=['rpiTempSrc/rpi_tempmon.py'],
     classifiers=[
         "Topic :: Utilities",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.11.2",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
 )

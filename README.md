@@ -1,7 +1,7 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/whitelight976)
 
-Overview
---------------------------------------------
+## Overview
+
 * Name: rpi_tempmon 
 * Title : Display the ARM CPU and GPU temperature of Raspberry Pi 
 * Description: 
@@ -15,11 +15,12 @@ plots for graph modes.
 
 * Author: Gavin Lyons
 * URL: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
-* Toolchain: RPI 3 model B, Raspbian 10 Buster, LXDE lxpanel 0.10.0, 
-Python 3.7.3.
+* Tested on Toolchains: 
+    1. RPI 3 model B. Raspbian 10 Buster, 32 bit. Python 3.7.3.
+    2. RPI 3 model B. Raspbian 12 Bookworm, 64 bit. Python 3.11.2.
 
-Table of contents
----------------------------
+## Table of contents
+
 
   * [Overview](#overview)
   * [Table of contents](#table-of-contents)
@@ -29,20 +30,33 @@ Table of contents
   * [Output](#output)
   * [Dependencies](#Dependencies)
   * [Features](#features)
+  *
 
-Installation
------------------------------------------------
 
-For Linux OS users. raspberrypi_tempmon is a python 3 program
-Make sure that: python3 & pip3 Have been installed on your machine, 
-Then Install form PyPi with: 
+## Installation
+
+Latest version 2.4 (12-2023)
+
+**PyPi & pip , pipx**
+
+The program is present in python package index, Pypi.
+Install using *pip* or *pipx* to the location or environment of your choice.
+Package name = rpi-tempmon.py
+
+**Manually install from github**
+
+The package is also archived on github and can be manually download and installed 
+via python and setup.py
 
 ```sh
-sudo pip3 install rpi_tempmon.py
+curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/243.tar.gz | tar xz
+cd raspberrypi_tempmon-2.4
+python3 setup.py build 
+python3 setup.py install --user
 ```
 
-Usage
--------------------------------------------
+## Usage
+
 Program is a python 3 package. Run in a terminal 
 by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
 
@@ -64,8 +78,8 @@ Options list *(Note: Options are standalone, not designed to be combined)*:
 | -s  | CSV mode , parses log.txt and converts it to log.csv,  CSV file |
 | -ST | Stress test CPU and measures temperature output to graph and csv file , optional number of test runs as a argument eg (-ST 5)|
 
-Files and setup
------------------------------------------
+## Files and setup
+
 rpi_tempmon files needed are listed below:
 
 | File Path | Description |
@@ -118,8 +132,8 @@ Settings:
 
 Screenshots, example config/log files are also available in documentation.
 
-Output
--------------------------------------
+## Output
+
 
 The output folder for log files is currently fixed at: 
 
@@ -127,12 +141,12 @@ The output folder for log files is currently fixed at:
 $HOME/.cache/rpi_tempmon/
 ```
 
-Dependencies
------------
+## Dependencies
+
 
 1. simple MSMTP - Version: 1.6.6-1- Program which delivers email from a computer to a mailhost.
 [MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
-Optional, only used by mail functions.
+Optional,  **ONLY**  used by mail functions.
 light SMTP client with support for server profiles
 client that can be used to send mails .
 (SMTP server), needed only for -m mail option. 
@@ -146,7 +160,7 @@ $ sudo apt install msmtp msmtp-mta mailutils mpack
 
 2. sysbench - Version 0.4.12-1.1 - benchmarking tool.
 [sysbench](https://manpages.debian.org/testing/sysbench/sysbench.1.en.html)
-Optional, only used by stress test option -ST.
+Optional, **ONLY** used by stress test option -ST.
 
 ```sh
 $ sudo apt install sysbench.
@@ -154,7 +168,7 @@ $ sudo apt install sysbench.
 
 3. libnotify-bin - Version 0.7.6-2 - sends desktop notifications to a notification daemon. 
 [libnotify](http://manpages.ubuntu.com/manpages/artful/man1/notify-send.1.html)
-Optional, This is only needed if using the -n option which uses the notify-send command. 
+Optional, This is **ONLY** needed if using the -n option which uses the notify-send command. 
 
 ```sh
 $ sudo apt install libnotify-bin
@@ -164,7 +178,7 @@ $ sudo apt install libnotify-bin
 [matplotlib help](https://matplotlib.org/)
 The graph modules requires python module *matplotlib* to draw graphs,
 This is for -g and -ST options.
-Installed by rpi_tempmon setup.py during installation in theory, if this fails install with pip.
+Installed by rpi_tempmon setup.py during installation in theory.
 
 5. psutil  - Version (2.1.1) -  Library for retrieving info on PC.
 [psutil](https://psutil.readthedocs.io/en/latest/)
@@ -176,8 +190,8 @@ Installed by setup.py during installation.
 Should be installed by default on most OS, like Raspibian.
 
 
-Features
-----------------------
+## Features
+
 
 For a raspberry pi the official operating temperature limit is 85°C, 
 and as a result the Raspberry Pi should start to thermally throttle 

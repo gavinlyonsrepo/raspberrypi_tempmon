@@ -106,7 +106,7 @@ def get_cpu_tempfunc():
 
 def get_gpu_tempfunc():
     """ Return GPU temperature as a character string"""
-    res = os.popen('/opt/vc/bin/vcgencmd measure_temp').readline()
+    res = os.popen('vcgencmd measure_temp').readline()
     return (res.replace("\n", "").replace("temp=", ""))
 
 

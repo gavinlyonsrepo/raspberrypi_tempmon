@@ -4,15 +4,6 @@ Version control history:
 * Version 1.0-1 020717
 	* First version
 
-* Version 1.1-2 220717
-	* CPU Alarm function added
-
-* Version 1.2-3 040817
-	* GPIO LED feature added.
-
-* Version 1.3-4 140817
-	* Graph of logfile function added.
-
 * Version 1.4-5 290817
 	* Code rewritten complete in python3 (from a mixture of bash and python)
 	* Graph of realtime CPU data added
@@ -44,3 +35,8 @@ Version control history:
 * version 2.3-4 05-05-2022
 	* added new graph mode option 12 GPU & CPU% & RAM% versus live time
 	* Automated creation of config file if missing (on start up new user)
+
+* version 2.4-5 12-2023
+	* Changed setup.py so it installs RPi.GPIO with pipx tool
+	* fixed GPU data not reporting properly on 64 bit systems
+
