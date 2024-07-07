@@ -11,7 +11,7 @@ setup(
     url="https://github.com/gavinlyonsrepo/raspeberrypi_tempmon",
     download_url='https://github.com/gavinlyonsrepo/raspeberrypi_tempmon/archive/3.0.tar.gz',
     packages=['rpiTempSrc','rpiTempMod',],
-    install_requires= ['matplotlib','pip','psutil','RPi.GPIO'],
+    install_requires= ['matplotlib','pip','psutil'],
     setup_requires = ['pip'],
     scripts=['rpiTempSrc/rpi_tempmon.py'],
     classifiers=[
