@@ -14,7 +14,8 @@ import matplotlib.dates as md
 
 # My modules
 from . import RpiTempmonWork as Work
-
+# Local testing, comment out next  line# for production
+#import RpiTempmonWork as Work
 
 class MatplotGraph(object):
     """

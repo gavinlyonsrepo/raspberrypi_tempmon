@@ -18,6 +18,7 @@ plots for graph modes.
 * Tested on Toolchains: 
     1. RPI 3 model B. Raspbian 10 Buster, 32 bit. Python 3.7.3.
     2. RPI 3 model B. Raspbian 12 Bookworm, 64 bit. Python 3.11.2.
+    3. RPI 5 Raspbian 12 Bookworm, 64 bit. Python 3.11.2.
 
 ## Table of contents
 
@@ -34,7 +35,7 @@ plots for graph modes.
 
 ## Installation
 
-Latest version 2.4 (12-2023)
+Latest version 3.0 (07-2024)
 
 **PyPi & pip , pipx**
 
@@ -48,8 +49,8 @@ The package is also archived on github and can be manually download and installe
 via python and setup.py
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/2.4.tar.gz | tar xz
-cd raspberrypi_tempmon-2.4
+curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/3.0.tar.gz | tar xz
+cd raspberrypi_tempmon-3.0
 python3 setup.py build 
 python3 setup.py install --user
 ```
@@ -97,7 +98,7 @@ A dummy config file is available in documentation folder at repository
 The setting "RPI_AuthUser" the is email address 
 destination of data from -m option. 
  
-Mail_Alert(one: mail alert on with -l option, zero: off)
+Mail_Alert(one: mail alert enabled , zero: off)
 
 The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
 
@@ -183,9 +184,10 @@ Installed by rpi_tempmon setup.py during installation in theory.
 Used to retrieve some CPU and memory information.
 Installed by setup.py during installation.
 
-6. RPi.GPIO - version0.6.4) - This package controls the GPIO on a Raspberry Pi.
-[rpi.gpio](https://pypi.org/project/RPi.GPIO/)
-Should be installed by default on most OS, like Raspibian.
+6. gpiozero - version(2.0) - This package controls the GPIO on a Raspberry Pi.
+[gpiozero](https://github.com/gpiozero/gpiozero)
+GPIO Zero is installed by default in the Raspberry Pi OS desktop image, note before rpi_tempmon version 3.0 , 
+rpi_tempmon used rpi.gpio.
 
 
 ## Features
@@ -285,8 +287,10 @@ config file which should be set up just for root account.
 3. Configure msmtp configuration file [MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
 A working example msmtprc config file for gmail is in documentation folder, "example_msmtprc".
 4. Optional, It is also possible you may need to configure your email account to accept msmtp mails 
-this was the case for gmail and ssmtp. See here [Login credentials not working with Gmail SMTP](https://stackoverflow.com/questions/16512592/login-credentials-not-working-with-gmail-smtp#27515883)
- "Less secure app access" in google mail to On.
+this was the case for gmail and ssmtp. In 2024 in order to get gmail working with ssmtp mail ,you must first set up 
+2 step verification on your google account then request a App password for an App from 'apppasswords' section. Google will then generate
+a 16 character API password,
+like 'aaaa bbbb cccc dddd' , use this in the password field of your msmtp configuration file.
 
 **6. graph mode**
 
@@ -356,4 +360,4 @@ called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
 ```
 
 At the end of test, there is an option to display results in a graph.
-Stress data carried out by rpi_tempmon for a RPi 3 can be found in repo [here](Documentation/stresstestdata/stresstest.md) 
+Stress data carried out by rpi_tempmon can be found in repo [here](Documentation/stresstestdata/stresstest.md) 

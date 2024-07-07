@@ -18,6 +18,7 @@
 (7) cont_mode_check: checks for continuous mode
 (8) main: main program loop
 (9) set_paths_func: set and check the paths for config & cache
+(10) led_toggle_func: function to toggle a GPIO
 """
 # =========================IMPORTS======================
 # Import the system modules needed to run rpi_tempmon.py.
@@ -28,14 +29,19 @@ import argparse
 import configparser
 import time
 import socket  # For hostname
+from gpiozero import LED
 
 # my modules
 from rpiTempMod import RpiTempmonGraph
 from rpiTempMod import RpiTempmonWork as Work
+# Local testing, comment out next 3 lines for production
+#sys.path.insert(0, '/home/gavin/Documents/tech/mytemp/rpiTempMod')
+#import RpiTempmonWork as Work
+#import RpiTempmonGraph
 
 # =======================GLOBALS=========================
 # metadata
-__VERSION__ = "2.4"
+__VERSION__ = "3.0"
 __URL__ = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
 # set the path for logfile
 DESTLOG = os.environ['HOME'] + "/.cache/rpi_tempmon"
@@ -46,11 +52,8 @@ DESTCONFIGFILE = DESTCONFIG + "/" + "rpi_tempmon.cfg"
 # ===================FUNCTION SECTION===============================
 
 
-def exit_handler_func(led_num):
+def exit_handler_func():
     """Handle the program exit"""
-    # code to switch off the LED before shutdown
-    if not led_num == 0:
-        Work.led_toggle_func("off", led_num)
     # Print exit message
     print("\nGoodbye " + os.environ['USER'])
     Work.msg_func("bold", "Endex")
@@ -157,13 +160,16 @@ def process_cmd_arguments():
 
     if args.mail:
         # mail mode
-        Work.mail_func(" Mail mode ", mailuser, DESTLOG)
+        if mail_alert == "1":
+            Work.mail_func(" Mail mode ", mailuser, DESTLOG)
+        else:
+            Work.msg_func("yellow", "Mail Alert disabled in config file rpitempmon.cfg  ::" + mail_alert)
 
     if args.graphlog:
         mygraph = RpiTempmonGraph.MatplotGraph("RPi Tempmon :")
         mygraph.graph_log_data(DESTLOG)
 
-    exit_handler_func(0)
+    exit_handler_func()
 
 
 def print_title_func():
@@ -205,12 +211,12 @@ def read_configfile_func():
         print("Must have section header of [MAIN] and six parameters")
         print("Help and example file at url")
         print(__URL__)
-        exit_handler_func(0)
+        exit_handler_func()
 
     return config_file_data
 
 
-def alarm_mode_check(config_file_data_main):
+def alarm_mode_check(config_file_data_main, my_led):
     """function to check alarm mode """
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
     if alarm_mode == "1":
@@ -220,10 +226,10 @@ def alarm_mode_check(config_file_data_main):
             Work.msg_func("red", "Warning : CPU over the temperature limit: " + cpu_limit + "'C")
             if led_mode == "1":
                 Work.msg_func("bold", "LED mode is on, GPIO pin selected: " + led_num)
-                Work.led_toggle_func("on", led_num)
+                led_toggle_func("on", my_led)
 
 
-def cont_mode_check(led_num):
+def cont_mode_check(my_led):
     """check for continuous mode """
     delay = 5
     # is their an argument?
@@ -245,7 +251,8 @@ def cont_mode_check(led_num):
         if Work.msg_func("yesno", ""):
             pass
         else:
-            exit_handler_func(led_num)
+            led_toggle_func("off", my_led)
+            exit_handler_func()
 
 
 def set_paths_func():
@@ -275,7 +282,7 @@ def set_paths_func():
             print("Problem Creating default config file: {}".format(error))
             print("Example config file and info can be found at:")
             print(__URL__)
-            exit_handler_func(0)
+            exit_handler_func()
         else:
             Work.msg_func("yellow", "  INFO : ")
             print("Config file was missing at {}".format(DESTCONFIGFILE))
@@ -283,11 +290,23 @@ def set_paths_func():
             input("Press <Enter> to continue")
 
 
+def led_toggle_func(mode, my_led):
+    """ led_toggle_func , function
+    to toggle a GPIO LED, passed mode on/off
+    and GPIO pin of LED"""
+    time.sleep(.05)  # gpio init
+    if mode == "off":
+       my_led.off()
+    else:
+       my_led.on()
+
+
 def main(config_file_data_main):
     """Function to hold main program loop, param1 : config file data tuple"""
-
+    
     # unpack config file data main tuple
     alarm_mode, cpu_limit, led_mode, led_num = config_file_data_main
+    my_led = LED(int(led_num))
     scan_count = 0
 
     # main loop
@@ -296,11 +315,12 @@ def main(config_file_data_main):
             print_title_func()
             scan_count += 1
             Work.msg_func("bold", "Number of scans: " + str(scan_count))
-            alarm_mode_check(config_file_data_main)
-            cont_mode_check(led_num)
-            Work.led_toggle_func("off", led_num)
+            alarm_mode_check(config_file_data_main, my_led)
+            cont_mode_check(my_led)
+            led_toggle_func("off", my_led)
     except KeyboardInterrupt:
-        exit_handler_func(led_num)
+        led_toggle_func("off", my_led)
+        exit_handler_func()
 
 
 # =====================MAIN===============================

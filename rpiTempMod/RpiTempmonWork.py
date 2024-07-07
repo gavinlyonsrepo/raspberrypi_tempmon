@@ -9,20 +9,17 @@ Functions in this module
 (5) get_cpu_use: Return CPU usage using psutil
 (6) get_ram_info: Return RAM usage using psutil
 (7) get_swap_info: Return swap memory  usage using psutil
-(8) led_toggle_func: functionto toggle a GPIO
-(9) logging_func: sents log data to file
-(10) mail_func: Sends mail via msmpt
-(11) data_func: Function to parse log file also produce a Data report
-(12) stress_func: Carry out stress test
-(13) msg_func: Writes to console
+(8) logging_func: sents log data to file
+(9) mail_func: Sends mail via msmpt
+(10) data_func: Function to parse log file also produce a Data report
+(11) stress_func: Carry out stress test
+(12) msg_func: Writes to console
 """
 import os
 import datetime
 import csv
 import time
-import RPi.GPIO as GPIO
 import psutil
-
 
 def csv_convert(destlog):
     """ Function to convert log.txt to log.csv"""
@@ -126,21 +123,6 @@ def get_swap_info():
     """ Return swap memory  usage using psutil """
     swap_cent = psutil.swap_memory()[3]
     return str(swap_cent)
-
-
-def led_toggle_func(mode, led):
-    """ led_toggle_func , function
-    to toggle a GPIO LED, passed mode on/off
-    and GPIO pin of LED"""
-    led = int(led)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(led, GPIO.OUT)
-    time.sleep(.05)  # gpio init
-    if mode == "off":
-        GPIO.output(led, False)
-    else:
-        GPIO.output(led, True)
 
 
 def logging_func(choice, mail_alert, cpu_limit, mailuser, destlog, alarm_mode):

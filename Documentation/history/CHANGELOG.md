@@ -40,3 +40,5 @@ Version control history:
 	* Changed setup.py so it installs RPi.GPIO with pipx tool
 	* fixed GPU data not reporting properly on 64 bit systems
 
+* version 3.0-1 07-2024
+	* Switched from Rpi.gpio to gpiozero so it works on raspberry pi 5 
