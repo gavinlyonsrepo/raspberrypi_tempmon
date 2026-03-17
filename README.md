@@ -35,7 +35,6 @@ It runs in a terminal and uses matplotlib plots for graph modes.
 
 ## Installation
 
-Latest version 3.1.0 (03-2026)
 
 **PyPI — pip or pipx**
 
@@ -50,8 +49,8 @@ pip install rpi-tempmon[graphs]
 **Manually install from GitHub**
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/3.1.0.tar.gz | tar xz
-cd raspberrypi_tempmon-3.1.0
+curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/3.1.1.tar.gz | tar xz
+cd raspberrypi_tempmon-3.1.1
 pip install .
 ```
 
