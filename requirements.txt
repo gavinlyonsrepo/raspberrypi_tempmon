@@ -1,0 +1,8 @@
+# Core — required for all modes
+psutil>=5.9
+gpiozero>=2.0
+lgpio>=0.2
+
+# Optional — only needed for graph and stress-test modes (-g, -ST)
+# Install with: pip install rpi-tempmon[graphs]
+# matplotlib>=3.5

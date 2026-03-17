@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rpi-tempmon"
+version = "3.1.0"
+description = "System monitoring tool for Raspberry Pi — CPU/GPU temperature, alarms, logging, and graphs"
+readme = "README.md"
+license = { file = "LICENSE.md" }
+requires-python = ">=3.9"
+authors = [
+    { name = "Gavin Lyons", url = "https://gavinlyonsrepo.github.io/" },
+]
+keywords = ["raspberry-pi", "temperature", "monitoring", "cpu", "gpio"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "psutil>=5.9",
+    "gpiozero>=2.0",
+    "lgpio>=0.2; platform_machine == 'aarch64' or platform_machine == 'armv7l'",
+]
+
+[project.optional-dependencies]
+graphs = ["matplotlib>=3.5"]
+dev = [
+    "pytest>=7.4",
+    "pytest-mock>=3.12",
+    "pre-commit>=3.6",
+]
+
+[project.scripts]
+rpi-tempmon = "rpi_tempmon.rpi_tempmon:main"
+
+[project.urls]
+Homepage = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
+"Bug Tracker" = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["rpi_tempmon"]

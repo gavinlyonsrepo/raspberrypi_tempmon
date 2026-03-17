@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+# Disabled for pytest conventions:
+# missing-function-docstring — test function names are self-documenting
+# redefined-outer-name      — pytest fixtures intentionally reuse names
+disable=
+    missing-function-docstring,
+    redefined-outer-name

@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+
+jobs:
+  lint:
+    name: Pylint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pylint psutil gpiozero lgpio matplotlib
+
+      - name: Run pylint
+        run: pylint rpi_tempmon/*.py --fail-under=10.0
+
+  test:
+    name: Pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-mock psutil gpiozero lgpio
+          pip install -e .
+
+      - name: Run tests
+        run: pytest tests/ -v

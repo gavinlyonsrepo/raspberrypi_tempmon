@@ -1,27 +1,28 @@
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/whitelight976)
 
+[![CI](https://github.com/gavinlyonsrepo/raspberrypi_tempmon/actions/workflows/ci.yml/badge.svg)](https://github.com/gavinlyonsrepo/raspberrypi_tempmon/actions/workflows/ci.yml)
+
+[![PyPI version](https://img.shields.io/pypi/v/rpi-tempmon.svg)](https://pypi.org/project/rpi-tempmon/)
+
 ## Overview
 
-* Name: rpi_tempmon 
-* Title : Display the ARM CPU and GPU temperature of Raspberry Pi 
-* Description: 
+* Name: rpi_tempmon
+* Title: Display the ARM CPU and GPU temperature of Raspberry Pi
+* Description:
 
-This python program will display the ARM CPU and 
-GPU temperature of a Raspberry Pi  
-features include command line display, GPIO (LED) output, logging, alarm limit, 
-graphing, desktop notification, stress tests and e-mailing options. 
-It is run in terminal and uses matplotlib 
-plots for graph modes.
+This Python program displays the ARM CPU and GPU temperature of a Raspberry Pi.
+Features include command line display, GPIO (LED) output, logging, alarm limit,
+graphing, desktop notification, stress tests and email options.
+It runs in a terminal and uses matplotlib plots for graph modes.
 
 * Author: Gavin Lyons
-* URL: https://github.com/gavinlyonsrepo/raspeberrypi_tempmon
-* Tested on Toolchains: 
+* URL: https://github.com/gavinlyonsrepo/raspberrypi_tempmon
+* Tested on:
     1. RPI 3 model B. Raspbian 10 Buster, 32 bit. Python 3.7.3.
     2. RPI 3 model B. Raspbian 12 Bookworm, 64 bit. Python 3.11.2.
     3. RPI 5 Raspbian 12 Bookworm, 64 bit. Python 3.11.2.
 
 ## Table of contents
-
 
   * [Overview](#overview)
   * [Table of contents](#table-of-contents)
@@ -29,335 +30,286 @@ plots for graph modes.
   * [Usage](#usage)
   * [Files and setup](#files-and-setup)
   * [Output](#output)
-  * [Dependencies](#Dependencies)
+  * [Dependencies](#dependencies)
   * [Features](#features)
-
 
 ## Installation
 
-Latest version 3.0 (07-2024)
+Latest version 3.1.0 (03-2026)
 
-**PyPi & pip , pipx**
-
-The program is present in python package index, Pypi.
-Install using *pip* or *pipx* to the location or environment of your choice.
-Package name = rpi-tempmon.py
-
-**Manually install from github**
-
-The package is also archived on github and can be manually download and installed 
-via python and setup.py
+**PyPI — pip or pipx**
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/3.0.tar.gz | tar xz
-cd raspberrypi_tempmon-3.0
-python3 setup.py build 
-python3 setup.py install --user
+# Core install (terminal and logging modes)
+pip install rpi-tempmon
+
+# With graph and stress-test support
+pip install rpi-tempmon[graphs]
+```
+
+**Manually install from GitHub**
+
+```sh
+curl -sL https://github.com/gavinlyonsrepo/raspberrypi_tempmon/archive/3.1.0.tar.gz | tar xz
+cd raspberrypi_tempmon-3.1.0
+pip install .
 ```
 
 ## Usage
 
-Program is a python 3 package. Run in a terminal 
-by typing rpi_tempmon.py or python3 rpi_tempmon.py: 
+Run from a terminal:
 
-rpi_tempmon.py -[options][arguments]
+```sh
+rpi-tempmon -[option] [argument]
+```
 
-Options list *(Note: Options are stand alone, not designed to be combined)*:
+Options list *(options are stand alone, not designed to be combined)*:
 
-| Option          | Description     |
-| --------------- | --------------- |
+| Option | Description |
+| ------ | ----------- |
 | -h  | Print help information and exit |
 | -v  | Print version information and exit |
-| -c  | Enters continuous mode, optional number of seconds as a argument eg (-c 5)|
-| -l  | Creates and/or appends to log file at output folder |
-| -L  | Creates a sub-folder at output folder with date/time stamp and puts a log file in it |
-| -m  | Sends the log file to an email account |
-| -g  | graph mode, Generate a menu where 12 types of graphs can be selected |
-| -a  | parse log file and produces a data report in terminal |
-| -n  | send notifications to desktop, Number argument to define behaviour |
-| -s  | CSV mode , parses log.txt and converts it to log.csv,  CSV file |
-| -ST | Stress test CPU and measures temperature output to graph and csv file , optional number of test runs as a argument eg (-ST 5)|
+| -c  | Continuous mode — integer argument sets delay in seconds e.g. -c 5 |
+| -l  | Log to file — creates/appends log.txt in output folder |
+| -L  | Log to folder — creates a timestamped sub-folder with a log file |
+| -m  | Mail mode — sends log.txt to configured email address |
+| -g  | Graph mode — menu of 12 graph types (requires [graphs] extra) |
+| -a  | Data mode — parses log file and produces a report in terminal |
+| -n  | Notify mode — desktop notification, integer argument sets behaviour |
+| -s  | CSV mode — converts log.txt to log.csv |
+| -ST | Stress test — integer argument sets number of runs e.g. -ST 5 |
 
 ## Files and setup
 
-rpi_tempmon files needed are listed below:
-
 | File Path | Description |
-| ------ | ------ |
-| rpi_tempmon.py | The main python script |
-| RpiTempmonWork.py| python module containing various utility functions used by main |
-| RpiTempmonGraph.py | python module dealing with graph output by matplotlib |
-| $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | config file |
-| README.md | help file |
+| --------- | ----------- |
+| rpi_tempmon/rpi_tempmon.py | Main entry point |
+| rpi_tempmon/sensors.py | Hardware metric reading |
+| rpi_tempmon/models.py | SystemSnapshot dataclass |
+| rpi_tempmon/config.py | Config loading and validation |
+| rpi_tempmon/display.py | Console output helpers |
+| rpi_tempmon/alarms.py | Alarm evaluation and GPIO LED |
+| rpi_tempmon/notifiers.py | Email and desktop notifications |
+| rpi_tempmon/log_writer.py | File I/O, log rotation, CSV, report |
+| rpi_tempmon/graphs.py | matplotlib graph modes (optional) |
+| rpi_tempmon/stress_test.py | CPU stress test mode |
+| $HOME/.config/rpi_tempmon/rpi_tempmon.cfg | Config file |
+| $HOME/.cache/rpi_tempmon/ | Output folder for logs |
 
+**Config file**
 
-Config file: The config file with dummy values is created if missing.
-A dummy config file is available in documentation folder at repository
-, used  for -m mail option, GPIO/LED feature and the alarm function. 
+The config file is created automatically with default values on first run.
+It is split into three sections:
 
-The setting "RPI_AuthUser" the is email address 
-destination of data from -m option. 
- 
-Mail_Alert(one: mail alert enabled , zero: off)
+```ini
+[ALARM]
+ALARM_MODE = 0
+CPU_UPPERLIMIT = 70
 
-The other settings are ALARM_MODE which should be set to one or zero(one: alarm on, zero: off)
+[MAIL]
+RPI_AuthUser = example@gmail.com
+MAIL_ALERT = 0
+SMTP_SERVER = smtp.gmail.com
+SMTP_PORT = 587
+SMTP_PASSWORD =
 
-CPU_UPPERLIMIT is the temperature limit of CPU in Centigrade, should be a positive integer.
-If alarm mode is on when CPU temperature  goes above this limit, the alarm function will activate. 
+[GPIO]
+LED_MODE = 0
+GPIO_LED = 26
+```
 
-LED_MODE which should be set to one or zero(one: LED mode on, zero: off) if on 
-an GPIO pin will switch on during an alarm state in continuous and normal mode.
-The RPI GPIO pin as defined by GPIO_LED number. You can connect an LED or another
-electronic component to this pin.
+**ALARM_MODE** — set to 1 to enable temperature alarms.
 
-Make sure to include the [MAIN] header and all settings just as below or 
-copy from the example file.
+**CPU_UPPERLIMIT** — temperature threshold in Celsius (1–99). When exceeded in alarm
+mode, the display turns red, the GPIO LED activates, and an email is sent if mail
+alert is configured.
 
-Settings:
+**MAIL settings** — set MAIL_ALERT to 1 and fill in your Gmail address and App Password.
+See Mail mode in Features section for setup instructions.
 
-[MAIN]
->
->RPI_AuthUser=examplemail@gmail.com
->
->MAIL_ALERT = 1
->
->ALARM_MODE = 1
->
->CPU_UPPERLIMIT = 60
->
->LED_MODE = 0
->
->GPIO_LED = 26
->
-
-Screenshots, example config/log files are also available in documentation.
+**LED_MODE** — set to 1 to enable GPIO LED output on alarm. Set GPIO_LED to the
+BCM pin number of your LED.
 
 ## Output
 
-The output folder for log files is currently fixed at: 
+Log files are written to:
 
 ```sh
 $HOME/.cache/rpi_tempmon/
 ```
 
+Log rotation is automatic — log.txt rotates at 1 MB keeping 5 backups
+(log.txt.1 through log.txt.5).
+
 ## Dependencies
 
+**Python packages (installed automatically via pip):**
 
-1. simple MSMTP - Version: 1.6.6-1- Program which delivers email from a computer to a mailhost.
-[MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
-Optional,  **ONLY**  used by mail functions.
-light SMTP client with support for server profiles
-client that can be used to send mails .
-(SMTP server), needed only for -m mail option. 
-Also needs to install another few small dependencies (mpack etc) in order to send attachment.
-See mail mode in features for setup.
+| Package | Use |
+| ------- | --- |
+| psutil >= 5.9 | CPU, RAM, and swap usage |
+| gpiozero >= 2.0 | GPIO LED control |
+| lgpio >= 0.2 | GPIO pin factory backend (Pi 4/5) |
+| matplotlib >= 3.5 | Graph modes — optional extra [graphs] |
 
-```sh
-$ sudo apt install msmtp msmtp-mta mailutils mpack
-
-```
-
-2. sysbench - Version 0.4.12-1.1 - benchmarking tool.
-[sysbench](https://manpages.debian.org/testing/sysbench/sysbench.1.en.html)
-Optional, **ONLY** used by stress test option -ST.
+**System packages (optional, install only if needed):**
 
 ```sh
-$ sudo apt install sysbench.
+# Desktop notifications (-n option)
+sudo apt install libnotify-bin
+
+# CPU stress test (-ST option)
+sudo apt install sysbench
 ```
-
-3. libnotify-bin - Version 0.7.6-2 - sends desktop notifications to a notification daemon. 
-[libnotify](http://manpages.ubuntu.com/manpages/artful/man1/notify-send.1.html)
-Optional, This is **ONLY** needed if using the -n option which uses the notify-send command. 
-
-```sh
-$ sudo apt install libnotify-bin
-```
-
-4. matplotlib - Version: 2.2.2 - Python plotting package. 
-[matplotlib help](https://matplotlib.org/)
-The graph modules requires python module *matplotlib* to draw graphs,
-This is for -g and -ST options.
-Installed by rpi_tempmon setup.py during installation in theory.
-
-5. psutil  - Version (2.1.1) -  Library for retrieving info on PC.
-[psutil](https://psutil.readthedocs.io/en/latest/)
-Used to retrieve some CPU and memory information.
-Installed by setup.py during installation.
-
-6. gpiozero - version(2.0) - This package controls the GPIO on a Raspberry Pi.
-[gpiozero](https://github.com/gpiozero/gpiozero)
-GPIO Zero is installed by default in the Raspberry Pi OS desktop image, note before rpi_tempmon version 3.0 , 
-rpi_tempmon used rpi.gpio.
 
 
 ## Features
 
-For a raspberry pi the official operating temperature limit is 85°C, 
-and as a result the Raspberry Pi should start to thermally throttle 
-performance around 82°C. The GPU and CPU are closely correlated
-to within a degree usually.
+For a Raspberry Pi the official operating temperature limit is 85°C.
+The Pi starts to thermally throttle performance around 82°C.
+GPU and CPU temperatures are closely correlated to within a degree.
 
-The program calculates the ARM CPU and GPU temperature of 
-a Raspberry Pi and outputs them in Centigrade together with
-datetime stamp. Also shows CPU, RAM memory usage .
+The program reads ARM CPU and GPU temperature and outputs them in Celsius
+together with a datetime stamp, CPU usage, RAM usage, and swap usage.
 
-The program has ten features
-1. Normal mode - output to screen with optional GPIO output, prompt for update.
-2. Continuous mode - output to screen with optional GPIO output, updates based on timer.
-3. Logfile mode   - output to single logfile(also mail mode if mail alert mode on and triggered).
-4. Logfolder mode - output to multiple logfile in separate folders.
-5. Mail mode  - output to email.
-6. Graph mode - Displays a graph of logfile created in mode 3
-7. CSV mode - parses log.txt and converts it to log.csv for external use
-8. Data mode - parses log file and produces a small report.
-9. Notify mode - send notifications to desktop, Number argument to define behaviour 
-10. Stress test mode - Stresses the CPU with math and records results in csv file and graph.
+The program has ten modes:
 
-**1. normal mode**
+1. Normal mode — output to screen, optional GPIO output, prompt to repeat.
+2. Continuous mode — output to screen, optional GPIO output, updates on a timer.
+3. Logfile mode — append to single log.txt, optional mail alert on alarm.
+4. Logfolder mode — write to a new timestamped sub-folder each run.
+5. Mail mode — send log.txt to email via Gmail SMTP.
+6. Graph mode — plot log data as one of 12 graph types.
+7. CSV mode — convert log.txt to log.csv for use in other applications.
+8. Data mode — parse log file and print a statistical report.
+9. Notify mode — send a desktop notification.
+10. Stress test mode — stress the CPU and record temperature results.
 
-Normal mode is run by running program with no command line arguments.
-In normal mode output, Data is sent to the terminal with prompt to repeat or quit. 
-The GPIO pin in config file will be turned on 
-and Data in red is displayed in screen for an Alarm state, if setup in config file.
+**1. Normal mode**
+
+Run with no arguments. Displays current readings and prompts to repeat or quit.
+Data is shown in red if the CPU temperature exceeds the configured alarm limit.
 
 **2. Continuous mode**
 
-Same as normal mode except in continuous mode. The program enters a delay between scan.
-This delay is set by positive integer argument placed after -c. 
-For example "-c 30" will wait 30 seconds between scans. 
-Data is sent to terminal screen. 
-The GPIO pin in config file will be turned on 
-and Data in red is displayed in screen for an Alarm state, if  setup in config file. 
- 
-![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen1.jpg)
- 
-**3. & 4. Log  modes**
+Same as normal mode but runs on a timer. Pass the delay in seconds as argument:
 
-In logfile mode the data is appended into a file log.txt at output folder. 
-With optional mail setup if alarm mode setup. For mode 3 an email
-is sent using mode 5 function, 
-but with warning in title.
- 
- Sample output of logfile:
- 
 ```sh
-TS = 18-04-22 14:19:42
-EP = 1524403183.0
-GPU temperature = 48.3'C
-CPU temperature = 48.3
-Cpu usage = 40.4
-RAM usage = 45.0
-Swap usage = 98.6
+rpi-tempmon -c 30
+```
+
+Press CTRL+C to quit. GPIO LED is safely turned off on exit.
+
+![ScreenShot cont mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/main_screen1.jpg)
+
+**3. & 4. Log modes**
+
+Logfile mode appends one entry to log.txt each run. Designed for use with cron:
+
+```sh
+# Run once per hour
+0 * * * * rpi-tempmon -l >/dev/null 2>&1
+```
+
+Sample log entry:
+
+```
+TS = 26-03-14 12:00:00
+EP = 1741953600.0
+GPU temperature = 52.0'C
+CPU temperature = 52.3
+Cpu usage = 18.4
+RAM usage = 44.1
+Swap usage = 12.0
 Raspberry pi temperature monitor: raspberrypi
 ```
 
-The log file is appended with "Warning:" text message if alarm state entered.
+Log rotation is automatic at 1 MB. An alarm warning line is appended
+if the temperature limit is exceeded.
 
-In logfolder mode in the output folder, a new sub-folder is created each
-time it is ran and a new log-file put in here. The sub-folder has following syntax
-1250-02Jul17_RPIT HHMM-DDMMMYY_XXXX. 
-This folder mode does not work with mail or graph mode at present.
-
-Logging modes are designed to be used with UNIX automation like crontab.
-For example this crontab entry will run logfile mode once an hour, 
-Note: The path to executable may differ on each users system.
-
-```sh
-0 * * * *  /usr/local/bin/rpi_tempmon.py -l >/dev/null 2>&1
-```
+Logfolder mode creates a new timestamped sub-folder each run.
+Note: logfolder mode does not work with mail or graph mode.
 
 **5. Mail mode**
 
-In mail mode an email is sent using msmtp. 
-The mail contains the data from logfile mode only, it will NOT work with 
-sub-folders from logfolder mode.
+Sends log.txt as an email attachment using Python's built-in smtplib.
+No system dependencies required.
 
-msmtp is used rather than than python inbuilt smtplib module 
-as this program was originally a bash program and this a legacy of that,
-also allows access to msmtp config file for greater portability 
-and security. The program originally used ssmtp but this is now obsolete 
-in latest raspbian software. 
+Setup steps:
+1. Enable 2-Step Verification on your Google account at myaccount.google.com/security
+2. Generate a Gmail App Password at https://myaccount.google.com/apppasswords
+3. Add the 16-character App Password to SMTP_PASSWORD in the [MAIL] config section
+4. Set MAIL_ALERT = 1 and RPI_AuthUser to your Gmail address
+5. Set SMTP_SERVER = smtp.gmail.com and SMTP_PORT = 587
 
-In order to get mail mode working you must complete 3-4 steps.
+**6. Graph mode**
 
-1. Set settings in rpi_tempmon config file, see Files and setup section.
-This file allows for user to set an email address without access to msmtp
-config file which should be set up just for root account.
-2. Install msmtp and dependencies as per installation section
-3. Configure msmtp configuration file [MSMTP help](https://wiki.archlinux.org/index.php/Msmtp)
-A working example msmtprc config file for gmail is in documentation folder, "example_msmtprc".
-4. Optional, It is also possible you may need to configure your email account to accept msmtp mails 
-this was the case for gmail and ssmtp. In 2024 in order to get gmail working with ssmtp mail ,you must first set up 
-2 step verification on your google account then request a App password for an App from 'apppasswords' section. Google will then generate
-a 16 character API password,
-like 'aaaa bbbb cccc dddd' , use this in the password field of your msmtp configuration file.
+Requires the graphs optional extra:
 
-**6. graph mode**
+```sh
+pip install rpi-tempmon[graphs]
+```
 
-In graph mode, the program using matplotlib (plotting library) 
-creates a plot of various data versus time.
-The logfile.txt created by logfile mode 3 is used for data for graph 1-8.
-graphs 1-4 use time-date stamp as yaxis value
-graphs 5-8 use Unix Epoch stamp as yaxis value, this is better for irregular data
-points across multiple dates.
-The graphs 9-12 are live plots sampled every two seconds for 150 points,
-so five minutes of live data.
+Generates a menu of 12 plot types from log data or live readings:
 
-![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmenu.png)  
+* Graphs 1–4: data versus date/time stamp
+* Graphs 5–8: data versus Unix epoch (better for irregular cron intervals)
+* Graphs 9–12: live data sampled every 2 seconds for 5 minutes
 
-Sample graph screenshot, screenshots of all others are in [screenshot folder of repo](screenshots/).
+![graph menu](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmenu.png)
 
 ![graph mode 6](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmode2.jpg)
 
 ![graph mode 12](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/graphmode12.jpg)
 
-**7. CSV(comma-separated values)  convert**
+**7. CSV mode**
 
-New in Version 2.0. Run with -s on the CLI.
-Parses log.txt and creates log.csv. 
-This csv file can be then used by user in another app.
-A comma-separated values (CSV) file is a delimited text file 
-that uses a comma to separate values. This file can then be loaded into libreoffice calc.
-for further processing, for example.
+Converts log.txt to log.csv for use in spreadsheet applications.
 
-sample output = time-data, CPU temp, GPU temp, CPU usage , RAM usage , swap usage 
+Sample output columns: timestamp, CPU temp, GPU temp, CPU usage, RAM usage, swap usage
 
-```sh
-18-04-04 09:46:51,61.5,60.7,25.8,33.9,11.6
+```
+26-03-14 12:00:00,52.3,52.0,18.4,44.1,12.0
 ```
 
-**8. data mode**
+**8. Data mode**
 
-Parses log file created by logfile mode 3 and produces a data report on console.
+Parses log.txt and prints a statistical report to the console showing
+average, min, and max for temperature, CPU usage, and RAM usage.
 
-**9. notify mode**
+**9. Notify mode**
 
-Send notifications to desktop, Numbered argument to define behaviour 
-After installing notify-send, Additional packages or steps 
-**may** be required to get notify-send working,
-depending on system. for example  
-[Jessie](https://raspberrypi.stackexchange.com/questions/75299/how-to-get-notify-send-working-on-raspbian-jessie)
+Sends a desktop notification via notify-send. Requires libnotify-bin.
 
+```sh
+sudo apt install libnotify-bin
+```
 
-* -n 2 = argument 2 = If run always display CPU temperature , no warning.
-* -n 3 = argument 3 = If run only display if CPU temperature exceeds limit
+* `-n 2` — always notify with current CPU temperature
+* `-n 3` — notify only when CPU temperature exceeds the configured limit
 
 ![notify mode](https://raw.githubusercontent.com/gavinlyonsrepo/raspberrypi_tempmon/master/Documentation/screenshots/nyalarm.jpg)
 
-
 **10. Stress test mode**
 
-This mode uses the sysbench benchmarking tool.
-The test request consists in calculation of prime numbers up to a value of 20000. 
-All calculations are performed using 64-bit integers. 4 worker threads are created.
-The number of test runs is passed on command line as integer max 50 min 2.
-CPU temperature and freq are recorded for each test run and are outputed to a csv file,
-called stresslog.csv . sample output = test run num, CPU temp, CPU usage.
+Stresses all CPU cores and records temperature and usage at each run.
+Results are saved to stresslog.csv and optionally displayed as a graph.
+Requires sysbench:
 
 ```sh
-1,56.9,27.1
-2,61.3,99.7
+sudo apt install sysbench
 ```
 
-At the end of test, there is an option to display results in a graph.
-Stress data carried out by rpi_tempmon can be found in repo [here](Documentation/stresstestdata/stresstest.md) 
+Pass the number of test runs as an argument (2–50):
+
+```sh
+rpi-tempmon -ST 10
+```
+
+Sample CSV output — run number, CPU temp, CPU usage:
+
+```
+1,54.0,27.1
+2,61.1,99.6
+3,61.1,99.8
+```

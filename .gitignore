@@ -1,8 +1,9 @@
-rpiTempSrc/__pycache__
-rpiTempMod/__pycache__
-rpiTempMod/*.pyc
+rpi_tempmon/__pycache__
+rpi_tempmon/*.pyc
 dist/
 build/
-rpi_tempmon.py.egg-info/
+rpi_tempmon.egg-info/
+.pytest_cache
 stuff/
 .gout*
+.venv/

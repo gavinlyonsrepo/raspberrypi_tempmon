@@ -22,23 +22,37 @@ Version control history:
 	* Epoch unix time added as an alternative to time-date stamp.
 	* Graph modes increased from 6 to 12
 	* Stress test added with csv file and graph output.
-	* Note: old logs files from version 1.x.x will no longer work with Version 2
-	start again with fresh data.
+	* Note: old log files from version 1.x.x will no longer work with Version 2,
+	  start again with fresh data.
 
 * version 2.2-3 210420
-	* For mail mode, replaced ssmpt with msmtp in mail function.
-	* ssmtp had to be replaced as apparently ssmtp is deprecated in RPi [Buster](https://raspberrypi.stackexchange.com/questions/99968/cannot-send-mail-from-buster), 
-	* and is considered obsolete, users were reporting issues via mail.
+	* For mail mode, replaced ssmtp with msmtp in mail function.
+	* ssmtp had to be replaced as apparently ssmtp is deprecated in RPi Buster
 	* Users using mail mode option will have to install and configure msmtp.
-	* Details in Readme. 
-	
+
 * version 2.3-4 05-05-2022
-	* added new graph mode option 12 GPU & CPU% & RAM% versus live time
-	* Automated creation of config file if missing (on start up new user)
+	* Added new graph mode option 12 GPU & CPU% & RAM% versus live time
+	* Automated creation of config file if missing on startup
 
 * version 2.4-5 12-2023
 	* Changed setup.py so it installs RPi.GPIO with pipx tool
-	* fixed GPU data not reporting properly on 64 bit systems
+	* Fixed GPU data not reporting properly on 64 bit systems
 
-* version 3.0-1 07-2024
-	* Switched from Rpi.gpio to gpiozero so it works on raspberry pi 5 
+* version 3.0 07-2024
+	* Switched from RPi.GPIO to gpiozero so it works on Raspberry Pi 5
+
+* version 3.1.0 03-2026
+	* Packaging: migrated from setup.py to pyproject.toml (PEP 517/518)
+	* Packaging: renamed PyPI package from rpi-tempmon.py to rpi-tempmon
+	* Packaging: matplotlib moved to optional extra, install with pip install rpi-tempmon[graphs]
+	* Packaging: added requires-python >= 3.9 constraint
+	* Packaging: added lgpio as explicit core dependency for gpiozero pin factory
+	* Config: config file restructured from single [MAIN] into [ALARM], [MAIL], [GPIO] sections
+	    * Note: existing rpi_tempmon.cfg must be deleted on first run to regenerate in new format
+	* Mail: replaced msmtp/mpack system dependencies with Python standard library smtplib
+	    * No apt install required for mail mode
+	    * Requires Gmail App Password, configured via SMTP_PASSWORD in [MAIL] section
+	* Reliability: log rotation added, rotates at 1MB keeping 5 backups
+	* Testing: pytest test suite added covering models, config, alarms, sensors, log_writer
+	* CI: GitHub Actions workflow added for lint and test on every push
+	* CI: pre-commit hook added for pylint on every commit
