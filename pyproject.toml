@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rpi-tempmon"
-version = "3.1.0"
+version = "3.1.1"
 description = "System monitoring tool for Raspberry Pi — CPU/GPU temperature, alarms, logging, and graphs"
 readme = "README.md"
 license = { file = "LICENSE.md" }

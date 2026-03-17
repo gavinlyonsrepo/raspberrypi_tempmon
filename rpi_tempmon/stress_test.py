@@ -7,19 +7,10 @@ import os
 from rpi_tempmon import display
 from rpi_tempmon import config
 from rpi_tempmon import sensors
-from rpi_tempmon.graphs import GraphSpec
 
 
 def run_stress_test(runs: int) -> None:
     """Run the sysbench CPU stress test and optionally graph the results."""
-    # Import graph module only when needed (optional dependency)
-    try:
-        from rpi_tempmon import graphs  # pylint: disable=import-outside-toplevel
-    except ImportError:
-        display.error("Graph mode requires matplotlib. \
-        `Install with: pip install rpi-tempmon[graphs]")
-        return
-
     if not 2 <= runs <= 50:
         display.error("Stress test runs must be between 2 and 50.")
         return
@@ -53,6 +44,13 @@ def run_stress_test(runs: int) -> None:
         return
 
     if input("\nView stress test graph? [y/N] ").lower() == "y":
+        try:
+            from rpi_tempmon import graphs          # pylint: disable=import-outside-toplevel
+            from rpi_tempmon.graphs import GraphSpec  # pylint: disable=import-outside-toplevel
+        except ImportError:
+            display.error("Graph mode requires matplotlib. \
+            Install with: pip install rpi-tempmon[graphs]")
+            return
         graph = graphs.MatplotGraph("RPi Tempmon :")
         graph.draw_graph(
             yaxislist, cpulist, cpu_uselist,

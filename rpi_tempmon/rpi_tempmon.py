@@ -20,7 +20,7 @@ from rpi_tempmon import stress_test
 from rpi_tempmon.config import load as load_config, CACHE_DIR
 from rpi_tempmon.models import SystemSnapshot
 
-__VERSION__ = "3.1.0"
+__VERSION__ = "3.1.1"
 __URL__ = "https://github.com/gavinlyonsrepo/raspberrypi_tempmon"
 
 # ---------------------------------------------------------------------------
