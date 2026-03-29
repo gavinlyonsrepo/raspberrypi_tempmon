@@ -151,6 +151,13 @@ Log rotation is automatic — log.txt rotates at 1 MB keeping 5 backups
 | lgpio >= 0.2 | GPIO pin factory backend (Pi 4/5) |
 | matplotlib >= 3.5 | Graph modes — optional extra [graphs] |
 
+Depending on Environment and location installed, you may also need to install 
+swig which is dependency of lgpio or install lgpio globally, [lgpio homepage](https://abyz.me.uk/lg/download.html)
+
+```sh
+sudo apt install swig
+```
+
 **System packages (optional, install only if needed):**
 
 ```sh
